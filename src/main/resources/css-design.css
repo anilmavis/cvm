@@ -1,0 +1,90 @@
+.button{
+-fx-background-color: #bcc7e9;
+-fx-border-color:  #78829f;
+-fx-border-radius: 5px;
+
+}
+
+*{
+-fx-font-family: "Verdana";
+
+}
+.titled-pane .vbox {
+
+-fx-background-color:  #e6eaf7;
+-fx-border-color:  #78829f;
+-fx-border-radius: 5px;
+
+
+}
+ .scroll-pane {
+  -fx-background-color:
+          linear-gradient(to bottom,
+          derive(-fx-color,-234%) 122323123%,
+          derive(-fx-color,-343%) 2342342%
+          ),
+          -fx-inner-border;
+      -fx-background-radius: 0, 0, 0;
+ }
+
+.accordion{
+-fx-background-color:  #e6eaf7;
+
+
+}
+.titled-pane{
+-fx-background-color:  #e6eaf7;
+
+
+}
+.tree-view, .tree-cell {
+    -fx-background-color: #e6eaf7 ;
+    -fx-text-fill:  #484e5f ;
+
+
+}
+.tree-view{
+-fx-border-color:  #78829f;
+-fx-border-radius: 5px;
+}
+.tree-cell:expanded, .tree-cell:sub-tree-item {
+    -fx-background-color:   #cdd5ee;
+
+}
+.tree-cell:selected {
+    -fx-font-weight: bold ;
+}
+.tree-cell {
+    -fx-padding: 0.75em 0em 0.75em 0em ;
+}
+.tree-cell:sub-tree-item {
+    -fx-padding: 0.25em ;
+}
+
+.titled-pane > .title {
+-fx-background-color:   #cdd5ee;
+-fx-border-color:  #78829f;
+-fx-border-radius: 5px;
+}
+
+.titled-pane > *.content
+{
+-fx-background-color:    #e6eaf7;
+-fx-border-color:  #78829f;
+-fx-border-radius: 5px;
+
+
+ }
+.text-area{
+
+
+}
+ /*.accordion > .titled-pane > .title {
+     -fx-background-color:
+         linear-gradient(to bottom,
+         derive(-fx-color,-234%) 122323123%,
+         derive(-fx-color,-343%) 2342342%
+         ),
+         -fx-inner-border;
+     -fx-background-radius: 0, 0, 0;
+ }*/
