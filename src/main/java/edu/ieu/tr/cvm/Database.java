@@ -81,10 +81,10 @@ public class Database {
 
     public String educationToString(Cv cv) {
         String s = "";
-        System.out.println("asddas");
+
         for (Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
             s += "insert into education (cv_id,name) values (" + cv.getId() + ",'" + entry.getKey() + "');";
-            System.out.println("asddas");
+
         }
         System.out.println(s);
 
@@ -119,7 +119,7 @@ public class Database {
 
 
     public Cv insert(Cv cv) throws SQLException {
-
+        //Adds CV
         String query = "insert into cv (" +
                 "fullName," +
                 "age," +
@@ -157,11 +157,49 @@ public class Database {
                         tagToString(cv)
 
         );
+        preparedStatement.close();
+        statement2.close();
 
         return cv;
+
+
+
     }
 
     public void delete(Cv cv) throws SQLException {
+        //Deletes CV
+        String query1 = "delete from cv where id=?;";
+        String query2 = "delete from skill where cv_id=?;";
+        String query3 = "delete from education where cv_id=?;";
+        String query4 = "delete from additional_skill where cv_id=?;";
+        String query5 = "delete from tag where cv_id=?;";
+
+        PreparedStatement preparedStatement1 = connection.prepareStatement(query1);
+        PreparedStatement preparedStatement2 = connection.prepareStatement(query2);
+        PreparedStatement preparedStatement3 = connection.prepareStatement(query3);
+        PreparedStatement preparedStatement4 = connection.prepareStatement(query4);
+        PreparedStatement preparedStatement5 = connection.prepareStatement(query5);
+
+        preparedStatement1.setInt(1,cv.getId());
+        preparedStatement1.executeUpdate();
+        preparedStatement1.close();
+
+        preparedStatement2.setInt(1,cv.getId());
+        preparedStatement2.executeUpdate();
+        preparedStatement2.close();
+
+        preparedStatement3.setInt(1,cv.getId());
+        preparedStatement3.executeUpdate();
+        preparedStatement3.close();
+
+        preparedStatement4.setInt(1,cv.getId());
+        preparedStatement4.executeUpdate();
+        preparedStatement4.close();
+
+        preparedStatement5.setInt(1,cv.getId());
+        preparedStatement5.executeUpdate();
+        preparedStatement5.close();
+
 
 
     }

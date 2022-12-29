@@ -26,6 +26,7 @@ public class App extends Application {
         hashMap.put("asd",12);
         Cv cv= new Cv(1,"a",18,1999,"b","c","d","e","f","g",new HashMap<>(),hashMap,new HashMap<>(),new ArrayList<>());
         database.insert(cv);
+        database.delete(cv);
         database.close();
         primaryStage.show();
     }
