@@ -11,7 +11,7 @@ import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
-public class AppController {
+public final class AppController {
     private Database database; // placeholder to avoid calling Database.getInstance() all the time
 
     @FXML
@@ -73,7 +73,7 @@ public class AppController {
     }
 
     private void onRemove() {
-        // treeView.getRoot().getChildren().add();
+        // treeView.getRoot().getChildren().remove(...);
     }
 
     private void clear() {

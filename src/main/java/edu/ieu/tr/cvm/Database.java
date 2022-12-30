@@ -1,13 +1,25 @@
 package edu.ieu.tr.cvm;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Database {
+public final class Database {
     private static Database instance;
+    public static Database getInstance() throws ClassNotFoundException, SQLException {
+        if (instance == null) {
+            instance = new Database();
+        }
+        return instance;
+    }
+
     private Connection connection;
 
     private Database() {
@@ -58,13 +70,6 @@ public class Database {
         statement.close();
     }
 
-    public static Database getInstance() throws ClassNotFoundException, SQLException {
-        if (instance == null) {
-            instance = new Database();
-        }
-        return instance;
-    }
-
     public List<Cv> getAll() throws SQLException {
         final PreparedStatement statement1 = connection.prepareStatement("select * from cv");
         final ResultSet set1 = statement1.executeQuery();
@@ -81,6 +86,9 @@ public class Database {
                     .jobAdress(set1.getString(7))
                     .telephoneNumber(set1.getString(8))
                     .build());
+            cvs.forEach(arg0 -> {
+                System.out.println(arg0.getId());
+            });
         }
         statement1.close();
 
@@ -95,10 +103,6 @@ public class Database {
         return cvs;
     }
 
-    public void close() throws SQLException {
-        connection.close();
-    }
-
     public String educationToString(final Cv cv) {
         String s = "";
 
@@ -106,8 +110,6 @@ public class Database {
             s += "insert into education (cv_id,name) values (" + cv.getId() + ",'" + entry.getKey() + "');";
 
         }
-        System.out.println(s);
-
         return s;
     }
 
@@ -116,7 +118,6 @@ public class Database {
         cv.getTags().forEach(e -> {
             sb.append("insert into tag (cv_id,name) values (" + cv.getId() + "," + e + ");");
         });
-
         return sb.toString();
     }
 
@@ -124,7 +125,6 @@ public class Database {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
             s += "insert into skill (cv_id,level) values (" + cv.getId() + "," + entry.getKey() + ");";
-
         return s;
     }
 
@@ -196,5 +196,9 @@ public class Database {
         statement5.setInt(1, cv.getId());
         statement5.executeUpdate();
         statement5.close();
+    }
+
+    public void close() throws SQLException {
+        connection.close();
     }
 }

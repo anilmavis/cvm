@@ -6,7 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 /*
-  A CV can be created by using Cv.Builder.getInstance()...build().
+  A CV can be created via constructor-like style
+  by using a utility method Cv.create(...).
+  Example:
+  Cv cv = Cv.create("a", 0, "b", "c", "d", "e", "f", "g");
+  or
+  Cv cv = Cv.create("a", 0, "b", "c", "d", "e", "f",
+  skills,
+  education,
+  additionalSkills,
+  tags);
+  These two CVs have 0 id, since they have not been inserted yet.
+  However, it can be passed as the first argument.
+
+  The above method implicitly uses Cv.Builder.getInstance()...build().
   Example:
   Cv cv = Cv.Builder.getInstance()
                     .fullName("a")
@@ -16,19 +29,23 @@ import java.util.Map;
                     .homeAddress("izmir")
                     .jobAdress("izmir")
                     .telephoneNumber("unknown")
+                    .websiteLink("izmirekonomi.edu.tr")
                     .build();
   The build method returns a new CV with the attributes of the builder.
-  The id should not be specified, since it is not known.
-  Thus, every CV has -1 as id before the insertion to the database.
   
-  If a cv shall be created from an existing CV to be updated, then use Cv.Builder.getInstance(cv)...build().
+  If a cv shall be created from an existing CV to be updated,
+  then use Cv.Builder.getInstance(cv)...build().
   Example:
-  Cv cv2 = Cv.Builder.getInstance(cv1).build(); // the same as cv1
-  Cv cv3 = Cv.Builder.getInstance(cv2).fullName("b").build(); // the same as cv1 but its name is b
+  // the same as cv1
+  Cv cv2 = Cv.Builder.getInstance(cv1).build();
+  // the same as cv1 but its name is b
+  Cv cv3 = Cv.Builder.getInstance(cv1).fullName("b").build();
   
-  Why Builder pattern is necessary?
-  The Cv class is immutable and it is hard to update its attributes without Builder pattern.
-  Immutable classes are generally thread-safe, thus they can be passed to threads without considering synchronisation.
+  Why is Builder pattern necessary?
+  The Cv class is immutable and it is hard to update its attributes without
+  Builder pattern.
+  Immutable classes are generally thread-safe,
+  thus they can be passed to threads without considering synchronisation.
  */
 public final class Cv {
     public static final class Builder {
@@ -141,6 +158,61 @@ public final class Cv {
         }
     }
 
+    public static Cv create(final int id, final String fullName,
+            final int birthYear, final String email,
+            final String description, final String homeAddress,
+            final String jobAdress, final String telephoneNumber,
+            final String websiteLink, final Map<String, Integer> skills,
+            final Map<String, Integer> education,
+            final Map<String, Integer> additionalSkills,
+            final List<String> tags) {
+        return Cv.Builder.getInstance()
+                .fullName(fullName)
+                .birthYear(birthYear)
+                .email(email)
+                .description(jobAdress)
+                .homeAddress(homeAddress)
+                .jobAdress(jobAdress)
+                .telephoneNumber(telephoneNumber)
+                .websiteLink(websiteLink)
+                .skills(skills)
+                .education(education)
+                .additionalSkills(additionalSkills)
+                .tags(tags)
+                .build();
+    }
+    public static Cv create(final int id, final String fullName,
+            final int birthYear, final String email,
+            final String description, final String homeAddress,
+            final String jobAdress, final String telephoneNumber,
+            final String websiteLink) {
+        return Cv.create(id, fullName, birthYear, email, description,
+                homeAddress, jobAdress, telephoneNumber,
+                websiteLink, new HashMap<>(), new HashMap<>(), new HashMap<>(),
+                new ArrayList<>());
+    }
+    public static Cv create(final String fullName,
+            final int birthYear, final String email,
+            final String description, final String homeAddress,
+            final String jobAdress, final String telephoneNumber,
+            final String websiteLink, final Map<String, Integer> skills,
+            final Map<String, Integer> education,
+            final Map<String, Integer> additionalSkills,
+            final List<String> tags) {
+        return Cv.create(0, fullName, birthYear, email, description,
+                homeAddress, jobAdress, telephoneNumber,
+                websiteLink, skills, education, additionalSkills,
+                tags);
+    }
+    public static Cv create(final String fullName,
+            final int birthYear, final String email,
+            final String description, final String homeAddress,
+            final String jobAdress, final String telephoneNumber,
+            final String websiteLink) {
+        return Cv.create(0, fullName, birthYear, email, description,
+                homeAddress, jobAdress, telephoneNumber,
+                websiteLink);
+    }
     private final int id;
     private final String fullName;
     private final int birthYear;
@@ -149,9 +221,13 @@ public final class Cv {
     private final String homeAddress;
     private final String jobAdress;
     private final String telephoneNumber;
+
     private final String websiteLink;
+
     private final Map<String, Integer> skills;
+
     private final Map<String, Integer> education;
+
     private final Map<String, Integer> additionalSkills;
 
     private final List<String> tags;
@@ -167,8 +243,12 @@ public final class Cv {
         telephoneNumber = builder.telephoneNumber;
         websiteLink = builder.websiteLink;
         skills = builder.skills == null ? new HashMap<>() : builder.skills;
-        education = builder.education == null ? new HashMap<>() : builder.education;
-        additionalSkills = builder.additionalSkills == null ? new HashMap<>() : builder.additionalSkills;
+        education = builder.education == null
+                ? new HashMap<>()
+                : builder.education;
+        additionalSkills = builder.additionalSkills == null
+                ? new HashMap<>()
+                : builder.additionalSkills;
         tags = builder.tags == null ? new ArrayList<>() : builder.tags;
     }
 
