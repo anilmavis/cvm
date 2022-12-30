@@ -16,50 +16,44 @@ public class Database {
     public void open() throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:cvm.db");
-        Statement statement = connection.createStatement();
-        String string =
-                //CV Table
-                "create table if not exists cv " +
-                        "(id integer primary key autoincrement," +
-                        "fullName varchar(255) not null," +
-                        "age integer not null," +
-                        "birthYear integer," +
-                        "email varchar(255)," +
-                        "description varchar(255)," +
-                        "homeAddress varchar(255)," +
-                        "jobAddress varchar(255)," +
-                        "telephoneNumber varchar(255)," +
-                        "websiteLink varchar(255)" +
-                        ") ; "
-                        +
-                        //Skill Table
-                        "create table if not exists skill " +
-                        "(id integer primary key autoincrement," +
-                        "cv_id integer," +
-                        "level integer," +
-                        "foreign key(cv_id) references cv(id)" +
-                        ") ; " +
-                        // Education Table
-                        "create table if not exists education " +
-                        "(id integer primary key autoincrement," +
-                        "cv_id integer," +
-                        "name varchar(255)," +
-                        "foreign key(cv_id) references cv(id)" +
-                        ") ; " +
-                        //Additional Skill
-                        "create table if not exists additional_skill " +
-                        "(id integer primary key autoincrement," +
-                        "cv_id integer," +
-                        "level integer," +
-                        "foreign key(cv_id) references cv(id)" +
-                        ") ; " +
-                        //Tag Table
-                        "create table if not exists tag " +
-                        "(id integer primary key autoincrement," +
-                        "cv_id integer," +
-                        "name varchar(255)," +
-                        "foreign key(cv_id) references cv(id)" +
-                        ") ; ";
+        final Statement statement = connection.createStatement();
+        final String string = "create table if not exists cv " +
+                "(id integer primary key autoincrement," +
+                "fullName varchar(255)," +
+                "age integer," +
+                "birthYear integer," +
+                "email varchar(255)," +
+                "description varchar(255)," +
+                "homeAddress varchar(255)," +
+                "jobAddress varchar(255)," +
+                "telephoneNumber varchar(255)," +
+                "websiteLink varchar(255)); " +
+
+                "create table if not exists skill " +
+                "(id integer primary key autoincrement," +
+                "cv_id integer," +
+                "name varchat(255)," +
+                "level integer," +
+                "foreign key(cv_id) references cv(id)); " +
+
+                "create table if not exists education " +
+                "(id integer primary key autoincrement," +
+                "cv_id integer," +
+                "name varchar(255)," +
+                "foreign key(cv_id) references cv(id)); " +
+
+                "create table if not exists additional_skill " +
+                "(id integer primary key autoincrement," +
+                "cv_id integer," +
+                "name varchat(255)," +
+                "level integer," +
+                "foreign key(cv_id) references cv(id));" +
+
+                "create table if not exists tag " +
+                "(id integer primary key autoincrement," +
+                "cv_id integer," +
+                "name varchar(255)," +
+                "foreign key(cv_id) references cv(id))";
         statement.executeUpdate(string);
         statement.close();
     }
@@ -71,29 +65,54 @@ public class Database {
         return instance;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public List<Cv> getAll() throws SQLException {
+        final PreparedStatement statement1 = connection.prepareStatement("select * from cv");
+        final ResultSet set1 = statement1.executeQuery();
+        final List<Cv> cvs = new ArrayList<>();
+
+        while (set1.next()) {
+            cvs.add(Cv.Builder.getInstance()
+                    .id(set1.getInt(1))
+                    .fullName(set1.getString(2))
+                    .birthYear(set1.getInt(3))
+                    .email(set1.getString(4))
+                    .description(set1.getString(5))
+                    .homeAddress(set1.getString(6))
+                    .jobAdress(set1.getString(7))
+                    .telephoneNumber(set1.getString(8))
+                    .build());
+        }
+        statement1.close();
+
+        final PreparedStatement statement2 = connection.prepareStatement("select * from skill");
+        final ResultSet set2 = statement2.executeQuery();
+
+        for (int i = 0; set2.next(); i++) {
+            final Map<String, Integer> skills = new HashMap<>();
+            skills.put(set2.getString(1), set2.getInt(2));
+            cvs.set(i, Cv.Builder.getInstance(cvs.get(i)).skills(skills).build());
+        }
+        return cvs;
     }
 
     public void close() throws SQLException {
         connection.close();
     }
 
-    public String educationToString(Cv cv) {
+    public String educationToString(final Cv cv) {
         String s = "";
 
-        for (Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
+        for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
             s += "insert into education (cv_id,name) values (" + cv.getId() + ",'" + entry.getKey() + "');";
 
         }
         System.out.println(s);
 
-
         return s;
     }
 
-    public String tagToString(Cv cv) {
-        StringBuilder sb = new StringBuilder();
+    public String tagToString(final Cv cv) {
+        final StringBuilder sb = new StringBuilder();
         cv.getTags().forEach(e -> {
             sb.append("insert into tag (cv_id,name) values (" + cv.getId() + "," + e + ");");
         });
@@ -101,107 +120,81 @@ public class Database {
         return sb.toString();
     }
 
-    public String skillToString(Cv cv) {
+    public String skillToString(final Cv cv) {
         String s = "";
-        for (Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
+        for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
             s += "insert into skill (cv_id,level) values (" + cv.getId() + "," + entry.getKey() + ");";
 
         return s;
     }
 
-    public String additionalskillToString(Cv cv) {
+    public String additionalskillToString(final Cv cv) {
         String s = "";
-        for (Map.Entry<String, Integer> entry : cv.getAdditionalSkills().entrySet())
+        for (final Map.Entry<String, Integer> entry : cv.getAdditionalSkills().entrySet())
             s += "insert into additional_skill (cv_id,level) values (" + cv.getId() + "," + entry.getKey() + ");";
 
         return s;
     }
 
-
-    public Cv insert(Cv cv) throws SQLException {
-        //Adds CV
-        String query = "insert into cv (" +
-                "fullName," +
-                "age," +
-                "birthYear," +
-                "email," +
-                "description," +
-                "homeAddress," +
-                "jobAddress," +
-                "telephoneNumber," +
-                "websiteLink)" +
-                " values (?, ?,?,?,?,?,?,?,?) returning id; ";
-
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-        preparedStatement.setString(1, cv.getFullName());
-        preparedStatement.setInt(2, cv.getAge());
-        preparedStatement.setInt(3, cv.getBirthYear());
-        preparedStatement.setString(4, cv.getEmail());
-        preparedStatement.setString(5, cv.getDescription());
-        preparedStatement.setString(6, cv.getHomeAddress());
-        preparedStatement.setString(7, cv.getJobAdress());
-        preparedStatement.setString(8, cv.getTelephoneNumber());
-        preparedStatement.setString(9, cv.getWebsiteLink());
-
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-
-        Statement statement2 = connection.createStatement();
-
+    public Cv insert(final Cv cv) throws SQLException {
+        final PreparedStatement statement1 = connection.prepareStatement("insert into cv " +
+                "(fullName, " +
+                "birthYear, " +
+                "email, " +
+                "description, " +
+                "homeAddress, " +
+                "jobAddress, " +
+                "telephoneNumber, " +
+                "websiteLink) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?) " +
+                "returning id");
+        statement1.setString(1, cv.getFullName());
+        statement1.setInt(2, cv.getBirthYear());
+        statement1.setString(3, cv.getEmail());
+        statement1.setString(4, cv.getDescription());
+        statement1.setString(5, cv.getHomeAddress());
+        statement1.setString(6, cv.getJobAdress());
+        statement1.setString(7, cv.getTelephoneNumber());
+        statement1.setString(8, cv.getWebsiteLink());
+        final ResultSet set = statement1.executeQuery();
+        final Cv builtCv = Cv.Builder.getInstance(cv)
+                .id(set.getInt(1))
+                .build();
+        statement1.close();
+        final Statement statement2 = connection.createStatement();
         statement2.executeUpdate(
+                skillToString(cv) + educationToString(cv) + additionalskillToString(cv) + tagToString(cv));
+        statement2.close();
+        return builtCv;
+    }
 
-                skillToString(cv)
-                        + educationToString(cv) +
-                        additionalskillToString(cv) +
-                        tagToString(cv)
+    public void delete(final Cv cv) throws SQLException {
+        final PreparedStatement statement1 = connection.prepareStatement("delete from cv where id = ?");
+        final PreparedStatement statement2 = connection.prepareStatement("delete from skill where cv_id = ?");
+        final PreparedStatement statement3 = connection
+                .prepareStatement("delete from education where cv_id = ?");
+        final PreparedStatement statement4 = connection
+                .prepareStatement("delete from additional_skill where cv_id = ?");
+        final PreparedStatement statement5 = connection.prepareStatement("delete from tag where cv_id = ?");
 
-        );
-        preparedStatement.close();
+        statement1.setInt(1, cv.getId());
+        statement1.executeUpdate();
+        statement1.close();
+
+        statement2.setInt(1, cv.getId());
+        statement2.executeUpdate();
         statement2.close();
 
-        return cv;
+        statement3.setInt(1, cv.getId());
+        statement3.executeUpdate();
+        statement3.close();
 
+        statement4.setInt(1, cv.getId());
+        statement4.executeUpdate();
+        statement4.close();
 
-
+        statement5.setInt(1, cv.getId());
+        statement5.executeUpdate();
+        statement5.close();
     }
-
-    public void delete(Cv cv) throws SQLException {
-        //Deletes CV
-        String query1 = "delete from cv where id=?;";
-        String query2 = "delete from skill where cv_id=?;";
-        String query3 = "delete from education where cv_id=?;";
-        String query4 = "delete from additional_skill where cv_id=?;";
-        String query5 = "delete from tag where cv_id=?;";
-
-        PreparedStatement preparedStatement1 = connection.prepareStatement(query1);
-        PreparedStatement preparedStatement2 = connection.prepareStatement(query2);
-        PreparedStatement preparedStatement3 = connection.prepareStatement(query3);
-        PreparedStatement preparedStatement4 = connection.prepareStatement(query4);
-        PreparedStatement preparedStatement5 = connection.prepareStatement(query5);
-
-        preparedStatement1.setInt(1,cv.getId());
-        preparedStatement1.executeUpdate();
-        preparedStatement1.close();
-
-        preparedStatement2.setInt(1,cv.getId());
-        preparedStatement2.executeUpdate();
-        preparedStatement2.close();
-
-        preparedStatement3.setInt(1,cv.getId());
-        preparedStatement3.executeUpdate();
-        preparedStatement3.close();
-
-        preparedStatement4.setInt(1,cv.getId());
-        preparedStatement4.executeUpdate();
-        preparedStatement4.close();
-
-        preparedStatement5.setInt(1,cv.getId());
-        preparedStatement5.executeUpdate();
-        preparedStatement5.close();
-
-
-
-    }
-
 }
