@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public final class App extends Application {
     @Override
     public void start(final Stage primaryStage) throws IOException, SQLException, ClassNotFoundException {
-        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/app-view.fxml")), 640, 480));
+        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/app-view.fxml"))));
         primaryStage.setTitle("cvm");
         primaryStage.show();
     }

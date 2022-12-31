@@ -42,6 +42,21 @@ public final class AppController {
     @FXML
     private Accordion filterAccordion;
 
+
+    @FXML
+    private Button filterGpaButton;
+
+    // filter text fields;
+
+    @FXML
+    private TextField lowestGpaTextField;
+
+    @FXML
+    private TextField highestGpaTextField;
+
+
+
+
     @FXML
     private void initialize() throws ClassNotFoundException, SQLException {
         database = Database.getInstance();
@@ -65,6 +80,7 @@ public final class AppController {
         });
         addButton.setOnAction((value) -> {
             DialogPane pane = new DialogPane();
+            pane.setStyle("-fx-background-color: #cdd5ee;");
             TextField fullName = new TextField();
             fullName.setPromptText("full name");
             TextField birthYear = new TextField();

@@ -75,9 +75,11 @@
 
 
 }
-.text-area{
+.text-field{
+    -fx-background-color:    #e6eaf7;
 
-
+-fx-border-color:  #78829f;
+    -fx-border-radius: 5px;
 }
 /*.accordion > .titled-pane > .title {
      -fx-background-color:
