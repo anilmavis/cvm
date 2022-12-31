@@ -1,18 +1,29 @@
 package edu.ieu.tr.cvm.controllers;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
 
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.VBox;
 
 public final class AppController {
-    private Database database; // placeholder to avoid calling Database.getInstance() all the time
+    private Database database;
 
     @FXML
     private TreeView<Cv> treeView;
@@ -21,6 +32,9 @@ public final class AppController {
 
     @FXML
     private Button addButton;
+
+    @FXML
+    private TextField textField;
 
     @FXML
     private Button removeButton;
@@ -50,33 +64,95 @@ public final class AppController {
             root.getChildren().add(new TreeItem<Cv>(cv));
         });
         addButton.setOnAction((value) -> {
-			try {
-				onAdd();
-			} catch (final SQLException e) {
-				e.printStackTrace();
-			}
-		});
-        removeButton.setOnAction((value) -> onRemove());
-    }
+            DialogPane pane = new DialogPane();
+            TextField fullName = new TextField();
+            fullName.setPromptText("full name");
+            TextField birthYear = new TextField();
+            birthYear.setPromptText("birth year");
+            TextField email = new TextField();
+            email.setPromptText("email");
+            TextField description = new TextField();
+            description.setPromptText("description");
+            TextField homeAddress = new TextField();
+            homeAddress.setPromptText("home address");
+            TextField jobAddress = new TextField();
+            jobAddress.setPromptText("job address");
+            TextField phone = new TextField();
+            phone.setPromptText("phone");
+            TextField website = new TextField();
+            website.setPromptText("website");
+            TextArea education = new TextArea();
+            education.setPromptText("education1, year1\reducation2, year2\r...");
+            TextArea skills = new TextArea();
+            skills.setPromptText("skill1, year1\rskill 2, level2\r...");
+            TextArea additionalSkills = new TextArea();
+            additionalSkills.setPromptText("skill1, year1\rskill 2, level2\r...");
+            TextArea tags = new TextArea();
+            tags.setPromptText("tag1\rtag2\r...");
+            VBox box = new VBox();
+            box.getChildren().addAll(fullName,
+                    birthYear,
+                    email,
+                    description,
+                    homeAddress,
+                    jobAddress,
+                    phone,
+                    website,
+                    education,
+                    skills,
+                    additionalSkills,
+                    tags);
+            pane.setContent(box);
+            pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CLOSE);
+            Dialog<Cv> dialog = new Dialog<>();
+            dialog.setTitle("add");
+            dialog.setDialogPane(pane);
+            dialog.setResultConverter(type -> {
+                if (type == ButtonType.OK) {
+                    try {
+                        return database.insert(new Cv(fullName.getText(),
+                                Integer.parseInt(birthYear.getText()),
+                                email.getText(),
+                                description.getText(),
+                                homeAddress.getText(),
+                                jobAddress.getText(),
+                                phone.getText(),
+                                website.getText(),
+                                new HashMap<>(),
+                                new HashMap<>(),
+                                new HashMap<>(),
+                                new ArrayList<>()));
+                    } catch (NumberFormatException | SQLException e) {
+                        e.printStackTrace();
+                        Alert alert = new Alert(AlertType.ERROR);
+                        alert.setContentText(e.getMessage());
+                        alert.show();
+                    }
+                }
+                return null;
+            });
+            Optional<Cv> optional = dialog.showAndWait();
+            if (optional.isPresent()) {
+                root.getChildren().add(new TreeItem<>(optional.get()));
+            }
+        });
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            root.getChildren().clear();
+            try {
+                database.filter("fullName", newValue).forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        removeButton.setOnAction((value) -> {
+            final TreeItem<Cv> selectedItem = treeView.getSelectionModel().getSelectedItem();
 
-    private void onAdd() throws SQLException {
-        final Cv cv1 = Cv.Builder.getInstance()
-                .fullName("a")
-                .birthYear(2001)
-                .email("a@izmirekonomi.edu.tr")
-                .description("I am a student.")
-                .homeAddress("izmir")
-                .jobAdress("izmir")
-                .telephoneNumber("unknown")
-                .build();
-        database.insert(cv1);
-    }
-
-    private void onRemove() {
-        // treeView.getRoot().getChildren().remove(...);
-    }
-
-    private void clear() {
-        treeView.getRoot().getChildren().clear();
+            try {
+                database.delete(selectedItem.getValue());
+                root.getChildren().remove(selectedItem);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
