@@ -32,7 +32,6 @@ public final class Database {
         final String string = "create table if not exists cv " +
                 "(id integer primary key autoincrement," +
                 "fullName varchar(255)," +
-                "age integer," +
                 "birthYear integer," +
                 "email varchar(255)," +
                 "description varchar(255)," +
