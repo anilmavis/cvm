@@ -7,6 +7,7 @@ import org.junit.Test;
 public final class AppTest {
     @Test
     public void shouldAnswerWithTrue() {
+
         assertTrue(true);
     }
 }
