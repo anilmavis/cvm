@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -26,6 +27,14 @@ public final class AppController {
     @FXML
     private TextField textField;
 
+    @FXML
+    private MenuItem menuItemHelp;
+
+    @FXML
+    private MenuItem menuItemDelete;
+
+    @FXML
+    private MenuItem menuItemClose;
     @FXML
     private Button removeButton;
 
@@ -190,6 +199,36 @@ public final class AppController {
                 alert.setContentText(e.getMessage());
                 alert.show();
             }
+        });
+
+        menuItemHelp.setOnAction((value) -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Help");
+            alert.setHeaderText(null);
+            alert.setContentText( "Aenean rutrum ullamcorper rutrum. Mauris placerat neque id odio porta sodales. Morbi mollis, turpis vitae tempus elementum, turpis est iaculis erat, nec mattis enim ligula vitae sem. Nam feugiat hendrerit lectus eget congue. Vestibulum enim libero, elementum at tortor et, consequat imperdiet purus. Integer eget nunc suscipit, molestie metus et, iaculis massa. Vestibulum imperdiet neque ut pharetra iaculis. Etiam id imperdiet nisi. Vivamus nec dapibus augue. Nam euismod, nibh eu dictum imperdiet, neque purus tincidunt sapien, at eleifend nibh dolor et felis.");
+            alert.showAndWait();
+
+        });
+
+        menuItemDelete.setOnAction((value) -> {
+            final TreeItem<Cv> selectedItem = treeView.getSelectionModel().getSelectedItem();
+
+            try {
+                database.delete(selectedItem.getValue());
+                root.getChildren().remove(selectedItem);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        menuItemClose.setOnAction((value) -> {
+            try {
+                database.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            Platform.exit();
         });
     }
 }
