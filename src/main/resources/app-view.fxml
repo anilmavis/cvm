@@ -32,15 +32,15 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
-                <MenuItem mnemonicParsing="false" text="Close" />
+                <MenuItem fx:id="menuItemClose" mnemonicParsing="false" text="Close" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
               <items>
-                <MenuItem mnemonicParsing="false" text="Delete" />
+                <MenuItem fx:id="menuItemDelete" mnemonicParsing="false" text="Delete" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Help">
+            <Menu fx:id="menuItemHelp" mnemonicParsing="false" text="Help">
               <items>
                 <MenuItem mnemonicParsing="false" text="About" />
               </items>
@@ -87,6 +87,7 @@
         </VBox>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" stylesheets="@style.css" HBox.hgrow="ALWAYS">
           <children>
+                  <Button mnemonicParsing="false" prefWidth="70.0" text="Export" />
             <Button fx:id="removeButton" maxWidth="70.0" mnemonicParsing="false" text="Delete " VBox.vgrow="ALWAYS" />
             <Button fx:id="editButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Edit" VBox.vgrow="ALWAYS" />
           </children>
@@ -104,15 +105,24 @@
                       <children>
                         <Accordion VBox.vgrow="ALWAYS">
                           <panes>
-                            <TitledPane animated="false" text="School">
+                            <TitledPane animated="false" text="Name">
                               <content>
-                                <VBox />
+                                <VBox>
+                                                   <children>
+                                                      <TextField promptText="Enter Name" />
+                                                   </children></VBox>
                               </content>
                             </TitledPane>
-                            <TitledPane animated="false" text="Major">
-                              <content>
-                                <VBox />
-                              </content>
+                            <TitledPane animated="false" text="Birth Year">
+                                             <content>
+                                                <VBox alignment="TOP_CENTER" spacing="10.0">
+                                                   <children>
+                                                      <Label text="Enter between" />
+                                                      <TextField promptText="Lowest" />
+                                                      <TextField promptText="Highest" />
+                                                   </children>
+                                                </VBox>
+                                             </content>
                             </TitledPane>
                             <TitledPane animated="false" text="GPA">
                               <content>
@@ -124,9 +134,9 @@
                                                    </children></VBox>
                               </content>
                             </TitledPane>
-                            <TitledPane animated="false" text="Skills">
+                            <TitledPane fx:id="skillsTitledPane" animated="false" text="Skills">
                               <content>
-                                <VBox />
+                                <VBox fx:id="skillsVBox" />
                               </content>
                             </TitledPane>
                             <TitledPane animated="false" text="Degree">
@@ -145,6 +155,21 @@
                                              </content>
                                           </TitledPane>
                                           <TitledPane animated="false" layoutX="10.0" layoutY="369.0" text="Title">
+                                             <content>
+                                                <VBox />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Tags">
+                                             <content>
+                                                <VBox />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="School">
+                                             <content>
+                                                <VBox />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Major">
                                              <content>
                                                 <VBox />
                                              </content>

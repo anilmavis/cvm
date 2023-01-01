@@ -220,8 +220,19 @@ public final class Database {
         while (set.next()){
             locations.add(set.getString(1));
         }
+        statement.close();
+        return locations;
 
 
+    }
+    public ArrayList<String> getSkills() throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement("select name from skill");
+        final  ResultSet set =statement.executeQuery();
+        ArrayList<String> locations= new ArrayList<>();
+        while (set.next()){
+            locations.add(set.getString(1));
+        }
+        statement.close();
         return locations;
 
 
