@@ -7,6 +7,7 @@ public final class Cv {
     private int id;
     private String fullName;
     private int birthYear;
+    private double gpa;
     private String email;
     private String description;
     private String homeAddress;
@@ -21,6 +22,7 @@ public final class Cv {
     public Cv(final int id,
                final String fullName,
                final int birthYear,
+              final double gpa,
                final String email,
                final String description,
                final String homeAddress,
@@ -34,6 +36,7 @@ public final class Cv {
         this.id = id;
         this.fullName = fullName;
         this.birthYear = birthYear;
+        this.gpa = gpa;
         this.email = email;
         this.description = description;
         this.homeAddress = homeAddress;
@@ -48,6 +51,7 @@ public final class Cv {
 
     public Cv(final String fullName,
                final int birthYear,
+              final double gpa,
                final String email,
                final String description,
                final String homeAddress,
@@ -61,6 +65,7 @@ public final class Cv {
         this(0,
              fullName,
              birthYear,
+             gpa,
              email,
              description,
              homeAddress,
@@ -97,7 +102,15 @@ public final class Cv {
         this.birthYear = birthYear;
     }
 
-    public String getEmail() {
+    public double getGpa() {
+		return gpa;
+	}
+
+	public void setGpa(final double gpa) {
+		this.gpa = gpa;
+	}
+
+	public String getEmail() {
         return email;
     }
 
@@ -178,6 +191,6 @@ public final class Cv {
     }
 
     public void print() {
-        System.out.println(fullName + birthYear + email + description + homeAddress + jobAddress + phone + website + education + skills + additionalSkills + tags);
+        System.out.println(fullName + birthYear + gpa + email + description + homeAddress + jobAddress + phone + website + education + skills + additionalSkills + tags);
     }
 }

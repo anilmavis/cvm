@@ -42,20 +42,14 @@ public final class AppController {
     @FXML
     private Accordion filterAccordion;
 
-
     @FXML
     private Button filterGpaButton;
-
-    // filter text fields;
 
     @FXML
     private TextField lowestGpaTextField;
 
     @FXML
     private TextField highestGpaTextField;
-
-
-
 
     @FXML
     private void initialize() throws ClassNotFoundException, SQLException {
@@ -85,6 +79,8 @@ public final class AppController {
             fullName.setPromptText("full name");
             TextField birthYear = new TextField();
             birthYear.setPromptText("birth year");
+            TextField gpa = new TextField();
+            gpa.setPromptText("gpa");
             TextField email = new TextField();
             email.setPromptText("email");
             TextField description = new TextField();
@@ -98,16 +94,17 @@ public final class AppController {
             TextField website = new TextField();
             website.setPromptText("website");
             TextArea education = new TextArea();
-            education.setPromptText("education1, year1\reducation2, year2\r...");
+            education.setPromptText("education\reducation 1, year 1\reducation 2, year 2\r...");
             TextArea skills = new TextArea();
-            skills.setPromptText("skill1, year1\rskill 2, level2\r...");
+            skills.setPromptText("additional skills\rskill 1, level 1\rskill 2, level 2\r...");
             TextArea additionalSkills = new TextArea();
-            additionalSkills.setPromptText("skill1, year1\rskill 2, level2\r...");
+            additionalSkills.setPromptText("skills\rskill1, level 2\rskill 2, level 2\r...");
             TextArea tags = new TextArea();
-            tags.setPromptText("tag1\rtag2\r...");
+            tags.setPromptText("tags\rtag1\rtag2\r...");
             VBox box = new VBox();
             box.getChildren().addAll(fullName,
                     birthYear,
+                    gpa,
                     email,
                     description,
                     homeAddress,
@@ -128,6 +125,7 @@ public final class AppController {
                     try {
                         return database.insert(new Cv(fullName.getText(),
                                 Integer.parseInt(birthYear.getText()),
+                                Float.parseFloat(gpa.getText()),
                                 email.getText(),
                                 description.getText(),
                                 homeAddress.getText(),
@@ -168,6 +166,18 @@ public final class AppController {
                 root.getChildren().remove(selectedItem);
             } catch (SQLException e) {
                 e.printStackTrace();
+            }
+        });
+        filterGpaButton.setOnAction(value -> {
+            root.getChildren().clear();
+            try {
+                database.filter("gpa", Double.parseDouble(lowestGpaTextField.getText()),
+                        Double.parseDouble(highestGpaTextField.getText())).forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
+            } catch (NumberFormatException | SQLException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setContentText(e.getMessage());
+                alert.show();
             }
         });
     }

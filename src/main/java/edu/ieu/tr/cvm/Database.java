@@ -34,6 +34,7 @@ public final class Database {
                 "(id integer primary key autoincrement," +
                 "fullName text," +
                 "birthYear integer," +
+                "gpa real," +
                 "email text," +
                 "description text," +
                 "homeAddress text," +
@@ -78,12 +79,13 @@ public final class Database {
             cvs.put(set1.getInt(1), new Cv(set1.getInt(1),
                     set1.getString(2),
                     set1.getInt(3),
-                    set1.getString(4),
+                    set1.getFloat(4),
                     set1.getString(5),
                     set1.getString(6),
                     set1.getString(7),
                     set1.getString(8),
                     set1.getString(9),
+                    set1.getString(10),
                     new HashMap<>(),
                     new HashMap<>(),
                     new HashMap<>(),
@@ -142,6 +144,10 @@ public final class Database {
         return toObject(String.format("select * from cv where %s like '%%%s%%'", fieldName, fieldValue));
     }
 
+    public List<Cv> filter(String fieldName, double lowest, double highest) throws SQLException {
+        return toObject(String.format("select * from cv where %s <= %f and %s >= %f", fieldName, highest, fieldName, lowest));
+    }
+
     public String educationToString(final Cv cv) {
         String s = "";
 
@@ -179,22 +185,24 @@ public final class Database {
         final PreparedStatement statement1 = connection.prepareStatement("insert into cv " +
                 "(fullName, " +
                 "birthYear, " +
+                "gpa, " +
                 "email, " +
                 "description, " +
                 "homeAddress, " +
                 "jobAddress, " +
                 "phone, " +
                 "website) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "returning id");
         statement1.setString(1, cv.getFullName());
         statement1.setInt(2, cv.getBirthYear());
-        statement1.setString(3, cv.getEmail());
-        statement1.setString(4, cv.getDescription());
-        statement1.setString(5, cv.getHomeAddress());
-        statement1.setString(6, cv.getJobAddress());
-        statement1.setString(7, cv.getPhone());
-        statement1.setString(8, cv.getWebsite());
+        statement1.setDouble(3, cv.getGpa());
+        statement1.setString(4, cv.getEmail());
+        statement1.setString(5, cv.getDescription());
+        statement1.setString(6, cv.getHomeAddress());
+        statement1.setString(7, cv.getJobAddress());
+        statement1.setString(8, cv.getPhone());
+        statement1.setString(9, cv.getWebsite());
         final ResultSet set = statement1.executeQuery();
         cv.setId(set.getInt(1));
         statement1.close();
@@ -207,7 +215,6 @@ public final class Database {
 
     public void delete(final Cv cv) throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("delete from cv where id = ?");
-
         statement.setInt(1, cv.getId());
         statement.executeUpdate();
         statement.close();
