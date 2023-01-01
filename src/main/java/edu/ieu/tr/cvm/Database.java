@@ -213,6 +213,20 @@ public final class Database {
         return cv;
     }
 
+    public ArrayList<String> getLocations() throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement("select homeAddress from cv");
+        final  ResultSet set =statement.executeQuery();
+        ArrayList<String> locations= new ArrayList<>();
+        while (set.next()){
+            locations.add(set.getString(1));
+        }
+
+
+        return locations;
+
+
+    }
+
     public void delete(final Cv cv) throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("delete from cv where id = ?");
         statement.setInt(1, cv.getId());

@@ -8,17 +8,7 @@ import java.util.Optional;
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
 
@@ -43,6 +33,14 @@ public final class AppController {
     private Accordion filterAccordion;
 
     @FXML
+    private TitledPane locationTitledPane;
+    @FXML
+    private VBox locationVBox;
+
+    private ArrayList<String> locationArray = new ArrayList<>();
+
+
+    @FXML
     private Button filterGpaButton;
 
     @FXML
@@ -55,6 +53,9 @@ public final class AppController {
     private void initialize() throws ClassNotFoundException, SQLException {
         database = Database.getInstance();
         database.open();
+
+
+
         root = new TreeItem<Cv>();
         root.setExpanded(true);
         treeView.setCellFactory(value -> new TreeCell<>() {
@@ -72,9 +73,14 @@ public final class AppController {
         database.getAll().forEach((cv) -> {
             root.getChildren().add(new TreeItem<Cv>(cv));
         });
+        database.getLocations().forEach(s -> locationVBox.getChildren().add(new CheckBox(s)));
         addButton.setOnAction((value) -> {
             DialogPane pane = new DialogPane();
+
+
             pane.setStyle("-fx-background-color: #cdd5ee;");
+            pane.setMaxHeight(400);
+            pane.setMaxWidth(400);
             TextField fullName = new TextField();
             fullName.setPromptText("full name");
             TextField birthYear = new TextField();
@@ -93,6 +99,7 @@ public final class AppController {
             phone.setPromptText("phone");
             TextField website = new TextField();
             website.setPromptText("website");
+            Label label = new Label("Education:");
             TextArea education = new TextArea();
             education.setPromptText("education\reducation 1, year 1\reducation 2, year 2\r...");
             TextArea skills = new TextArea();
@@ -103,26 +110,30 @@ public final class AppController {
             tags.setPromptText("tags\rtag1\rtag2\r...");
             VBox box = new VBox();
             box.getChildren().addAll(fullName,
-                    birthYear,
-                    gpa,
+                    birthYear,//filter
+                    gpa,//filter
                     email,
                     description,
-                    homeAddress,
+                    homeAddress,//filter
                     jobAddress,
                     phone,
                     website,
+                    label,
                     education,
-                    skills,
+                    skills,//filter
                     additionalSkills,
-                    tags);
+                    tags ); //filter
             pane.setContent(box);
             pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CLOSE);
             Dialog<Cv> dialog = new Dialog<>();
             dialog.setTitle("add");
             dialog.setDialogPane(pane);
+
             dialog.setResultConverter(type -> {
                 if (type == ButtonType.OK) {
                     try {
+                        locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));
+                        locationTitledPane.setContent(locationVBox);
                         return database.insert(new Cv(fullName.getText(),
                                 Integer.parseInt(birthYear.getText()),
                                 Float.parseFloat(gpa.getText()),

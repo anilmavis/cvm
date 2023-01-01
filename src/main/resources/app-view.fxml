@@ -100,7 +100,7 @@
               <panes>
                 <TitledPane alignment="CENTER" animated="false" prefHeight="485.0" prefWidth="280.0" stylesheets="@style.css" text="Filter">
                   <content>
-                    <VBox prefHeight="200.0" prefWidth="100.0">
+                    <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                       <children>
                         <Accordion VBox.vgrow="ALWAYS">
                           <panes>
@@ -121,7 +121,6 @@
                                                       <Label text="Enter between" />
                                                       <TextField fx:id="lowestGpaTextField" promptText="Lowest" />
                                                       <TextField fx:id="highestGpaTextField" promptText="Highest" />
-                                                      <Button fx:id="filterGpaButton" mnemonicParsing="false" text="Filter" />
                                                    </children></VBox>
                               </content>
                             </TitledPane>
@@ -130,13 +129,33 @@
                                 <VBox />
                               </content>
                             </TitledPane>
-                            <TitledPane animated="false" text="...">
+                            <TitledPane animated="false" text="Degree">
                               <content>
                                 <VBox />
                               </content>
                             </TitledPane>
+                                          <TitledPane fx:id="locationTitledPane" animated="false" layoutX="10.0" layoutY="114.0" text="Location">
+                                             <content>
+                                                <VBox fx:id="locationVBox" spacing="3.0" />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" layoutX="10.0" layoutY="369.0" text="Publications">
+                                             <content>
+                                                <VBox />
+                                             </content>
+                                          </TitledPane>
+                                          <TitledPane animated="false" layoutX="10.0" layoutY="369.0" text="Title">
+                                             <content>
+                                                <VBox />
+                                             </content>
+                                          </TitledPane>
                           </panes>
                         </Accordion>
+                                    <Button fx:id="filterGpaButton" mnemonicParsing="false" text="Filter">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
                       </children>
                     </VBox>
                   </content>

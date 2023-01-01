@@ -81,12 +81,13 @@
 -fx-border-color:  #78829f;
     -fx-border-radius: 5px;
 }
-/*.accordion > .titled-pane > .title {
-     -fx-background-color:
-         linear-gradient(to bottom,
-         derive(-fx-color,-234%) 122323123%,
-         derive(-fx-color,-343%) 2342342%
-         ),
-         -fx-inner-border;
-     -fx-background-radius: 0, 0, 0;
- }*/
+.dialog-pane {
+    -fx-background-color:    #e6eaf7;
+}
+
+.dialog-pane > .text-field {
+    -fx-background-color:    #e6eaf7;
+}
+
+
+
