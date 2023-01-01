@@ -205,7 +205,7 @@ public final class AppController {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Help");
             alert.setHeaderText(null);
-            alert.setContentText( "Aenean rutrum ullamcorper rutrum. Mauris placerat neque id odio porta sodales. Morbi mollis, turpis vitae tempus elementum, turpis est iaculis erat, nec mattis enim ligula vitae sem. Nam feugiat hendrerit lectus eget congue. Vestibulum enim libero, elementum at tortor et, consequat imperdiet purus. Integer eget nunc suscipit, molestie metus et, iaculis massa. Vestibulum imperdiet neque ut pharetra iaculis. Etiam id imperdiet nisi. Vivamus nec dapibus augue. Nam euismod, nibh eu dictum imperdiet, neque purus tincidunt sapien, at eleifend nibh dolor et felis.");
+            alert.setContentText( "Aenean rutrum ullamcorper rutrum. Mauris placerat neque id odio porta sodales."); // The help text will be written here.
             alert.showAndWait();
 
         });
