@@ -30,6 +30,18 @@ public class DatabaseTest {
         Database.getInstance().close();
 
     }
+
+    @Test
+    public void testInsertwithEmptyName() throws SQLException, ClassNotFoundException {
+        Database.getInstance().open();
+        int oldlength=Database.getInstance().getAll().size();
+        Database.getInstance().insert(new Cv("",2001,3,"humayzehraozer@gmail.com","student","home","address","05533000958","github.com",new HashMap<>(),new HashMap<>(),new HashMap<>(),new ArrayList<>()));
+        int newlength=Database.getInstance().getAll().size();
+        assertEquals(newlength, oldlength + 1);
+        Database.getInstance().close();
+
+    }
+
     @Test
     public void testDelete() throws SQLException, ClassNotFoundException{
         Database.getInstance().open();
@@ -40,7 +52,6 @@ public class DatabaseTest {
         int newlength=Database.getInstance().getAll().size();
         assertEquals(oldlength , newlength+1);
         Database.getInstance().close();
-
     }
 }
 
