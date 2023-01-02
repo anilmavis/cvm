@@ -87,9 +87,8 @@
         </VBox>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" stylesheets="@style.css" HBox.hgrow="ALWAYS">
           <children>
-                  <Button mnemonicParsing="false" prefWidth="70.0" text="Export" />
+                  <Button mnemonicParsing="false" prefWidth="70.0" text="Export" fx:id="exportButton" />
             <Button fx:id="removeButton" maxWidth="70.0" mnemonicParsing="false" text="Delete " VBox.vgrow="ALWAYS" />
-            <Button fx:id="editButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" text="Edit" VBox.vgrow="ALWAYS" />
           </children>
           <padding>
             <Insets top="200.0" />

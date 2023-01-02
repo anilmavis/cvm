@@ -1,5 +1,6 @@
 package edu.ieu.tr.cvm.controllers;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import edu.ieu.tr.cvm.AcademicCv;
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
+import edu.ieu.tr.cvm.Exporter;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
@@ -87,6 +89,9 @@ public final class AppController {
 
     @FXML
     private TextField highestGpaTextField;
+
+    @FXML
+    private Button exportButton;
 
     @FXML
     private void initialize() throws ClassNotFoundException, SQLException {
@@ -504,5 +509,12 @@ public final class AppController {
             }
             Platform.exit();
         });
+        exportButton.setOnAction(value -> {
+                try {
+					Exporter.export(treeView.getSelectionModel().getSelectedItem().getValue());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            });
     }
 }
