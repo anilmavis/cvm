@@ -53,13 +53,14 @@ public final class Database {
                 "(id integer primary key autoincrement," +
                 "cv_id integer," +
                 "name text," +
+            "year integer," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade); " +
 
-                "create table if not exists additional_skill " +
+                "create table if not exists publications " +
                 "(id integer primary key autoincrement," +
                 "cv_id integer," +
                 "name text," +
-                "level integer," +
+                "year integer," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade);" +
 
                 "create table if not exists tag " +
@@ -119,7 +120,7 @@ public final class Database {
         }
         statement2.close();
 
-        final PreparedStatement statement3 = connection.prepareStatement("select * from additional_skill");
+        final PreparedStatement statement3 = connection.prepareStatement("select * from publications");
         final ResultSet set3 = statement3.executeQuery();
 
         while (set3.next()) {
@@ -170,7 +171,7 @@ public final class Database {
         String s = "";
 
         for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
-            s += "insert into education (cv_id,name) values (" + cv.getId() + ",'" + entry.getKey() + "');";
+            s += "insert into education (cv_id,name,year) values (" + cv.getId() + ",'" + entry.getKey() + "'," + entry.getValue()+");";
 
         }
         return s;
@@ -178,8 +179,9 @@ public final class Database {
 
     public String tagToString(final Cv cv) {
         final StringBuilder sb = new StringBuilder();
+        System.out.println(cv.getTags());
         cv.getTags().forEach(e -> {
-            sb.append("insert into tag (cv_id,name) values (" + cv.getId() + "," + e + ");");
+            sb.append("insert into tag (cv_id,name) values (" + cv.getId() + ",'" + e + "');");
         });
         return sb.toString();
     }
@@ -187,16 +189,102 @@ public final class Database {
     public String skillToString(final Cv cv) {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
-            s += "insert into skill (cv_id,level) values (" + cv.getId() + "," + entry.getKey() + ");";
+            s += "insert into skill (cv_id,name, level) values (" + cv.getId() + ",'" + entry.getKey() +"'," + entry.getValue() + ");";
         return s;
     }
 
     public String publicationsToString(final AcademicCv cv) {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
-            s += "insert into additional_skill (cv_id,level) values (" + cv.getId() + "," + entry.getKey() + ");";
+            s += "insert into publications (cv_id, name, year) values (" + cv.getId() + ",'" + entry.getKey() + "',"+ entry.getValue() + ");";
 
         return s;
+    }
+
+
+
+
+
+
+
+
+
+
+    public String educationToStringUpdate(final Cv cv) {
+        String s = "";
+
+        for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
+            s += "update education set name = '" + entry.getKey() + "', year = " + entry.getValue() + " where cv_id = " + cv.getId() + ";";
+
+        }
+        return s;
+    }
+
+    public String tagToStringUpdate(final Cv cv) {
+        final StringBuilder sb = new StringBuilder();
+        System.out.println(cv.getTags());
+        cv.getTags().forEach(e -> {
+            sb.append("update tag set name = '" + e +"' where cv_id = " + cv.getId() +";");
+        });
+        return sb.toString();
+    }
+
+    public String skillToStringUpdate(final Cv cv) {
+        String s = "";
+        for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
+        s += "update skill set name = '" + entry.getKey() + "', level = " + entry.getValue() + " where cv_id = " + cv.getId() + ";";
+        return s;
+    }
+
+    public String publicationsToStringUpdate(final AcademicCv cv) {
+        String s = "";
+        for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
+            
+        s += "update publications set name = '" + entry.getKey() + "', year = " + entry.getValue() + " where cv_id = " + cv.getId() + ";";
+
+        return s;
+    }
+
+    public void update(final Cv cv) throws SQLException {
+        final PreparedStatement statement1 = connection.prepareStatement("update cv set " +
+                "fullName = ?," +
+                "birthYear = ?," +
+                "gpa=?," +
+                "email=?, " +
+                "description=?, " +
+                "homeAddress=?, " +
+                "jobAddress=?, " +
+                "phone=?, " +
+                "website=? where id = ?");
+        statement1.setString(1, cv.getFullName());
+        statement1.setInt(2, cv.getBirthYear());
+        statement1.setDouble(3, cv.getGpa());
+        statement1.setString(4, cv.getEmail());
+        statement1.setString(5, cv.getDescription());
+        statement1.setString(6, cv.getHomeAddress());
+        if (cv instanceof AcademicCv academicCv) {
+            
+        statement1.setString(7, academicCv.getJobAddress());
+        } else {
+            
+        }
+        statement1.setString(8, cv.getPhone());
+        statement1.setString(9, cv.getWebsite());
+        statement1.setInt(10, cv.getId());
+        statement1.executeUpdate();
+        
+        statement1.close();
+        final Statement statement2 = connection.createStatement();
+        String publications = "";
+        if (cv instanceof AcademicCv academicCv) {
+            publications = publicationsToStringUpdate(academicCv);
+        } else {
+            
+        }
+        System.out.println(skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
+        statement2.executeUpdate(
+                skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
+        statement2.close();
     }
 
     public Cv insert(final Cv cv) throws SQLException {
@@ -236,6 +324,7 @@ public final class Database {
         } else {
             
         }
+        System.out.println(skillToString(cv) + educationToString(cv) + publications + tagToString(cv));
         statement2.executeUpdate(
                 skillToString(cv) + educationToString(cv) + publications + tagToString(cv));
         statement2.close();
