@@ -82,13 +82,23 @@ public final class AppController {
     @FXML
     private VBox skillsVBox;
     @FXML
-    private Button filterGpaButton;
+    private Button filterButton;
+
+    @FXML
+    private TextField nameFilter;
 
     @FXML
     private TextField lowestGpaTextField;
 
     @FXML
     private TextField highestGpaTextField;
+
+    @FXML
+    private TextField lowestBirthTextField;
+
+    @FXML
+    private TextField highestBirthTextField;
+
 
     @FXML
     private Button exportButton;
@@ -465,7 +475,41 @@ public final class AppController {
                 e.printStackTrace();
             }
         });
-        filterGpaButton.setOnAction(value -> {
+
+        filterButton.setOnAction(value -> {
+            ArrayList<String> queries = new ArrayList<>();
+            try {
+                if (!nameFilter.getText().isEmpty()){
+
+
+                    queries.add("fullName like '%"+nameFilter.getText()+"%' and ");
+
+                }
+                if (!highestBirthTextField.getText().isEmpty() && !lowestBirthTextField.getText().isEmpty()){
+                    queries.add("birthYear <= "+highestBirthTextField.getText()+" and birthYear >= "+ lowestBirthTextField.getText()+" and ");
+                }
+
+                if (!highestGpaTextField.getText().isEmpty() && !lowestGpaTextField.getText().isEmpty()){
+                    queries.add("gpa <= "+highestGpaTextField.getText()+" and gpa >= "+ lowestGpaTextField.getText()+" ");
+                }
+
+                database.filterAll(queries).forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
+
+
+
+
+            } catch (NumberFormatException | SQLException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setContentText(e.getMessage());
+                alert.show();
+            }
+
+
+        });
+
+
+    /*    filterButton.setOnAction(value -> {
             root.getChildren().clear();
             try {
                 database.filter("gpa", Double.parseDouble(lowestGpaTextField.getText()),
@@ -477,7 +521,7 @@ public final class AppController {
                 alert.setContentText(e.getMessage());
                 alert.show();
             }
-        });
+        });*/
 
         menuItemHelp.setOnAction((value) -> {
             Alert alert = new Alert(AlertType.INFORMATION);

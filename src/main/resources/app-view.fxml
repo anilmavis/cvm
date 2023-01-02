@@ -40,7 +40,7 @@
                 <MenuItem fx:id="menuItemDelete" mnemonicParsing="false" text="Delete" />
               </items>
             </Menu>
-            <Menu fx:id="menuItemHelp" mnemonicParsing="false" text="Help">
+            <Menu mnemonicParsing="false" text="Help">
               <items>
                 <MenuItem fx:id="menuItemHelp" mnemonicParsing="false" text="About" />
               </items>
@@ -108,7 +108,7 @@
                               <content>
                                 <VBox>
                                                    <children>
-                                                      <TextField promptText="Enter Name" />
+                                                      <TextField fx:id="nameFilter" promptText="Enter Name" />
                                                    </children></VBox>
                               </content>
                             </TitledPane>
@@ -117,8 +117,8 @@
                                                 <VBox alignment="TOP_CENTER" spacing="10.0">
                                                    <children>
                                                       <Label text="Enter between" />
-                                                      <TextField promptText="Lowest" />
-                                                      <TextField promptText="Highest" />
+                                                      <TextField fx:id="lowestBirthTextField" promptText="Lowest" />
+                                                      <TextField fx:id="highestBirthTextField" promptText="Highest" />
                                                    </children>
                                                 </VBox>
                                              </content>
@@ -175,7 +175,7 @@
                                           </TitledPane>
                           </panes>
                         </Accordion>
-                                    <Button fx:id="filterGpaButton" mnemonicParsing="false" text="Filter">
+                                    <Button fx:id="filterButton" mnemonicParsing="false" text="Filter">
                                        <VBox.margin>
                                           <Insets top="10.0" />
                                        </VBox.margin>

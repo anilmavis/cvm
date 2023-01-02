@@ -1,5 +1,6 @@
 package edu.ieu.tr.cvm;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,9 @@ public class Cv {
     private Map<String, Integer> education;
     private Map<String, Integer> skills;
     private List<String> tags;
+
+
+
 
     public Cv(final int id,
             final String fullName,
@@ -69,6 +73,9 @@ public class Cv {
                 skills,
                 tags);
     }
+
+
+
 
     public int getId() {
         return id;

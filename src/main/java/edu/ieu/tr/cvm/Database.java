@@ -167,6 +167,14 @@ public final class Database {
         return toObject(String.format("select * from cv where %s <= %f and %s >= %f", fieldName, highest, fieldName, lowest));
     }
 
+    public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        for (String s :queries) {
+            query.append(s);
+        }
+        return toObject("select * from cv where "+ query);
+    }
+
     public String educationToString(final Cv cv) {
         String s = "";
 
