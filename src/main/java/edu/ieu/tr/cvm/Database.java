@@ -76,7 +76,9 @@ public final class Database {
         final PreparedStatement statement1 = connection.prepareStatement(query);
         final ResultSet set1 = statement1.executeQuery();
         while (set1.next()) {
-            cvs.put(set1.getInt(1), new Cv(set1.getInt(1),
+            if (set1.getString(8) != null) {
+                
+            cvs.put(set1.getInt(1), new AcademicCv(set1.getInt(1),
                     set1.getString(2),
                     set1.getInt(3),
                     set1.getFloat(4),
@@ -90,6 +92,20 @@ public final class Database {
                     new HashMap<>(),
                     new HashMap<>(),
                     new ArrayList<>()));
+            } else {
+                cvs.put(set1.getInt(1), new Cv(set1.getInt(1),
+                    set1.getString(2),
+                    set1.getInt(3),
+                    set1.getFloat(4),
+                    set1.getString(5),
+                    set1.getString(6),
+                    set1.getString(7),
+                    set1.getString(9),
+                    set1.getString(10),
+                    new HashMap<>(),
+                    new HashMap<>(),
+                    new ArrayList<>()));
+            }
         }
         statement1.close();
 
@@ -107,9 +123,11 @@ public final class Database {
         final ResultSet set3 = statement3.executeQuery();
 
         while (set3.next()) {
-            final Map<String, Integer> additionalSkills = new HashMap<>();
-            additionalSkills.put(set3.getString(3), set3.getInt(4));
-            cvs.get(set3.getInt(2)).setAdditionalSkills(additionalSkills);
+            if (cvs.get(set3.getInt(2)) instanceof AcademicCv academicCv) {
+            final Map<String, Integer> publications = new HashMap<>();
+            publications.put(set3.getString(3), set3.getInt(4));
+            academicCv.setPublications(publications);
+            }
         }
         statement3.close();
 
@@ -173,9 +191,9 @@ public final class Database {
         return s;
     }
 
-    public String additionalskillToString(final Cv cv) {
+    public String publicationsToString(final AcademicCv cv) {
         String s = "";
-        for (final Map.Entry<String, Integer> entry : cv.getAdditionalSkills().entrySet())
+        for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
             s += "insert into additional_skill (cv_id,level) values (" + cv.getId() + "," + entry.getKey() + ");";
 
         return s;
@@ -200,15 +218,26 @@ public final class Database {
         statement1.setString(4, cv.getEmail());
         statement1.setString(5, cv.getDescription());
         statement1.setString(6, cv.getHomeAddress());
-        statement1.setString(7, cv.getJobAddress());
+        if (cv instanceof AcademicCv academicCv) {
+            
+        statement1.setString(7, academicCv.getJobAddress());
+        } else {
+            
+        }
         statement1.setString(8, cv.getPhone());
         statement1.setString(9, cv.getWebsite());
         final ResultSet set = statement1.executeQuery();
         cv.setId(set.getInt(1));
         statement1.close();
         final Statement statement2 = connection.createStatement();
+        String publications = "";
+        if (cv instanceof AcademicCv academicCv) {
+            publications = publicationsToString(academicCv);
+        } else {
+            
+        }
         statement2.executeUpdate(
-                skillToString(cv) + educationToString(cv) + additionalskillToString(cv) + tagToString(cv));
+                skillToString(cv) + educationToString(cv) + publications + tagToString(cv));
         statement2.close();
         return cv;
     }

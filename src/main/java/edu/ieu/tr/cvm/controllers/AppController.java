@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
+import edu.ieu.tr.cvm.AcademicCv;
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -22,6 +22,8 @@ public final class AppController {
     private TreeView<Cv> treeView;
 
     private TreeItem<Cv> root;
+
+    private TreeItem<Cv> academicRoot;
 
     @FXML
     private Button addButton;
@@ -44,26 +46,18 @@ public final class AppController {
     @FXML
     private Accordion filterAccordion;
 
-
-    //location
+    // location
     @FXML
     private TitledPane locationTitledPane;
     @FXML
     private VBox locationVBox;
 
-
-
-    //skills
+    // skills
 
     @FXML
     private TitledPane skillsTitledPane;
     @FXML
     private VBox skillsVBox;
-
-
-
-
-
     @FXML
     private Button filterGpaButton;
 
@@ -77,11 +71,16 @@ public final class AppController {
     private void initialize() throws ClassNotFoundException, SQLException {
         database = Database.getInstance();
         database.open();
-
-
-
-        root = new TreeItem<Cv>();
+        root = new TreeItem<Cv>(new Cv("student", -1, -1, "", "", "", "", "", new HashMap<>(), new HashMap<>(),
+                new ArrayList<>()));
         root.setExpanded(true);
+        academicRoot = new TreeItem<Cv>(new AcademicCv("academic", -1, -1, "", "", "", "", "", "", new HashMap<>(),
+                new HashMap<>(), new HashMap<>(), new ArrayList<>()));
+        academicRoot.setExpanded(true);
+        treeView.setRoot(new TreeItem<>());
+        treeView.getRoot().setExpanded(true);
+        treeView.getRoot().getChildren().add(root);
+        treeView.getRoot().getChildren().add(academicRoot);
         treeView.setCellFactory(value -> new TreeCell<>() {
             @Override
             protected void updateItem(final Cv cv, final boolean empty) {
@@ -93,7 +92,6 @@ public final class AppController {
                 }
             }
         });
-        treeView.setRoot(root);
         database.getAll().forEach((cv) -> {
             root.getChildren().add(new TreeItem<Cv>(cv));
         });
@@ -101,24 +99,8 @@ public final class AppController {
         database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
         addButton.setOnAction((value) -> {
 
-
-
-
             DialogPane pane = new DialogPane();
 
-
-            HBox statusHbox = new HBox();
-            ChoiceBox<String> status = new ChoiceBox<>();
-            status.getItems().add("Academician");
-            status.getItems().add("Student");
-            statusHbox.getChildren().add(status);
-
-
-
-
-            pane.setStyle("-fx-background-color: #cdd5ee;");
-            pane.setMaxHeight(400);
-            pane.setMaxWidth(400);
             TextField fullName = new TextField();
             fullName.setPromptText("full name");
             TextField birthYear = new TextField();
@@ -139,29 +121,56 @@ public final class AppController {
             website.setPromptText("website");
             Label label = new Label("Education:");
             TextArea education = new TextArea();
-            education.setPromptText("education\reducation 1, year 1\reducation 2, year 2\r...");
+            education.setPromptText("education\rname 1, register year 1\rname 2, register year 2\r...");
             TextArea skills = new TextArea();
-            skills.setPromptText("additional skills\rskill 1, level 1\rskill 2, level 2\r...");
-            TextArea additionalSkills = new TextArea();
-            additionalSkills.setPromptText("skills\rskill1, level 2\rskill 2, level 2\r...");
+            skills.setPromptText("skills\rname 1, level 1\rname 2, level 2\r...");
+            TextArea publications = new TextArea();
+            publications.setPromptText("publications\rname 1, year 1\rname 2, year 2\r...");
             TextArea tags = new TextArea();
             tags.setPromptText("tags\rtag1\rtag2\r...");
+            
+            HBox statusHbox = new HBox();
+            ChoiceBox<String> status = new ChoiceBox<>();
+            status.getItems().add("Academician");
+            status.getItems().add("Student");
+            jobAddress.setVisible(false);
+            publications.setVisible(false);
+            status.getSelectionModel().selectFirst();
+            status.getSelectionModel().selectedItemProperty().addListener((listener, valuee, newValue) -> {
+                    if (newValue == "Academician") {
+                        publications.setVisible(true);
+                        publications.clear();
+                        jobAddress.setVisible(true);
+                        jobAddress.clear();
+                        
+                    } else if (newValue == "Student") {
+                        publications.setVisible(false);
+                        publications.clear();
+                        jobAddress.setVisible(false);
+                        jobAddress.clear();
+                    }
+                });
+            statusHbox.getChildren().add(status);
+
+            pane.setStyle("-fx-background-color: #cdd5ee;");
+            pane.setMaxHeight(400);
+            pane.setMaxWidth(400);
             VBox box = new VBox();
             box.getChildren().addAll(statusHbox,
                     fullName,
-                    birthYear,//filter
-                    gpa,//filter
+                    birthYear, // filter
+                    gpa, // filter
                     email,
                     description,
-                    homeAddress,//filter
+                    homeAddress, // filter
                     jobAddress,
                     phone,
                     website,
                     label,
                     education,
-                    skills,//filter
-                    additionalSkills,
-                    tags ); //filter
+                    skills, // filter
+                                     publications,
+                    tags); // filter
             pane.setContent(box);
             pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CLOSE);
             Dialog<Cv> dialog = new Dialog<>();
@@ -173,7 +182,9 @@ public final class AppController {
                     try {
                         locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));
                         locationTitledPane.setContent(locationVBox);
-                        return database.insert(new Cv(fullName.getText(),
+                        Cv cv;
+                        if (status.getSelectionModel().getSelectedItem() == "Academician") {
+                            cv = new AcademicCv(fullName.getText(),
                                 Integer.parseInt(birthYear.getText()),
                                 Float.parseFloat(gpa.getText()),
                                 email.getText(),
@@ -185,7 +196,23 @@ public final class AppController {
                                 new HashMap<>(),
                                 new HashMap<>(),
                                 new HashMap<>(),
-                                new ArrayList<>()));
+                                        new ArrayList<>());
+                        } else {
+                            cv = new Cv(fullName.getText(),
+                                Integer.parseInt(birthYear.getText()),
+                                Float.parseFloat(gpa.getText()),
+                                email.getText(),
+                                description.getText(),
+                                homeAddress.getText(),
+                                
+                                phone.getText(),
+                                website.getText(),
+                                new HashMap<>(),
+                                new HashMap<>(),
+                                
+                                        new ArrayList<>());
+                        }
+                        return database.insert(cv);
                     } catch (NumberFormatException | SQLException e) {
                         e.printStackTrace();
                         Alert alert = new Alert(AlertType.ERROR);
@@ -197,7 +224,13 @@ public final class AppController {
             });
             Optional<Cv> optional = dialog.showAndWait();
             if (optional.isPresent()) {
-                root.getChildren().add(new TreeItem<>(optional.get()));
+                Cv cv = optional.get();
+                
+                if (cv instanceof AcademicCv academicCv) {
+                    academicRoot.getChildren().add(new TreeItem<>(academicCv));
+                } else {
+                    root.getChildren().add(new TreeItem<>(cv));
+                }
             }
         });
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -222,7 +255,8 @@ public final class AppController {
             root.getChildren().clear();
             try {
                 database.filter("gpa", Double.parseDouble(lowestGpaTextField.getText()),
-                        Double.parseDouble(highestGpaTextField.getText())).forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
+                        Double.parseDouble(highestGpaTextField.getText()))
+                        .forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
             } catch (NumberFormatException | SQLException e) {
                 e.printStackTrace();
                 Alert alert = new Alert(AlertType.ERROR);
@@ -235,7 +269,8 @@ public final class AppController {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Help");
             alert.setHeaderText(null);
-            alert.setContentText( "Aenean rutrum ullamcorper rutrum. Mauris placerat neque id odio porta sodales. Morbi mollis, turpis vitae tempus elementum, turpis est iaculis erat, nec mattis enim ligula vitae sem. Nam feugiat hendrerit lectus eget congue. Vestibulum enim libero, elementum at tortor et, consequat imperdiet purus. Integer eget nunc suscipit, molestie metus et, iaculis massa. Vestibulum imperdiet neque ut pharetra iaculis. Etiam id imperdiet nisi. Vivamus nec dapibus augue. Nam euismod, nibh eu dictum imperdiet, neque purus tincidunt sapien, at eleifend nibh dolor et felis.");
+            alert.setContentText(
+                    "Aenean rutrum ullamcorper rutrum. Mauris placerat neque id odio porta sodales. Morbi mollis, turpis vitae tempus elementum, turpis est iaculis erat, nec mattis enim ligula vitae sem. Nam feugiat hendrerit lectus eget congue. Vestibulum enim libero, elementum at tortor et, consequat imperdiet purus. Integer eget nunc suscipit, molestie metus et, iaculis massa. Vestibulum imperdiet neque ut pharetra iaculis. Etiam id imperdiet nisi. Vivamus nec dapibus augue. Nam euismod, nibh eu dictum imperdiet, neque purus tincidunt sapien, at eleifend nibh dolor et felis.");
             alert.showAndWait();
 
         });

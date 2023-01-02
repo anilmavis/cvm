@@ -3,7 +3,7 @@ package edu.ieu.tr.cvm;
 import java.util.List;
 import java.util.Map;
 
-public final class Cv {
+public class Cv {
     private int id;
     private String fullName;
     private int birthYear;
@@ -11,28 +11,24 @@ public final class Cv {
     private String email;
     private String description;
     private String homeAddress;
-    private String jobAddress;
     private String phone;
     private String website;
     private Map<String, Integer> education;
     private Map<String, Integer> skills;
-    private Map<String, Integer> additionalSkills;
     private List<String> tags;
 
     public Cv(final int id,
-               final String fullName,
-               final int birthYear,
-              final double gpa,
-               final String email,
-               final String description,
-               final String homeAddress,
-               final String jobAdress,
-               final String phone,
-               final String website,
-               final Map<String, Integer> education,
-               final Map<String, Integer> skills,
-               final Map<String, Integer> additionalSkills,
-               final List<String> tags) {
+            final String fullName,
+            final int birthYear,
+            final double gpa,
+            final String email,
+            final String description,
+            final String homeAddress,
+            final String phone,
+            final String website,
+            final Map<String, Integer> education,
+            final Map<String, Integer> skills,
+            final List<String> tags) {
         this.id = id;
         this.fullName = fullName;
         this.birthYear = birthYear;
@@ -40,42 +36,38 @@ public final class Cv {
         this.email = email;
         this.description = description;
         this.homeAddress = homeAddress;
-        this.jobAddress = jobAdress;
         this.phone = phone;
         this.website = website;
         this.education = education;
         this.skills = skills;
-        this.additionalSkills = additionalSkills;
         this.tags = tags;
     }
 
-    public Cv(final String fullName,
-               final int birthYear,
-              final double gpa,
-               final String email,
-               final String description,
-               final String homeAddress,
-               final String jobAdress,
-               final String phone,
-               final String website,
-               final Map<String, Integer> education,
-               final Map<String, Integer> skills,
-               final Map<String, Integer> additionalSkills,
-               final List<String> tags) {
-        this(0,
-             fullName,
-             birthYear,
-             gpa,
-             email,
-             description,
-             homeAddress,
-             jobAdress,
-             phone,
-             website,
-             education,
-             skills,
-             additionalSkills,
-             tags);
+    public Cv(
+            final String fullName,
+            final int birthYear,
+            final double gpa,
+            final String email,
+            final String description,
+            final String homeAddress,
+            final String phone,
+            final String website,
+            final Map<String, Integer> education,
+            final Map<String, Integer> skills,
+            final List<String> tags) {
+        
+             this(0,
+                fullName,
+                birthYear,
+                gpa,
+                email,
+                description,
+                homeAddress,
+                phone,
+                website,
+                education,
+                skills,
+                tags);
     }
 
     public int getId() {
@@ -103,14 +95,14 @@ public final class Cv {
     }
 
     public double getGpa() {
-		return gpa;
-	}
+        return gpa;
+    }
 
-	public void setGpa(final double gpa) {
-		this.gpa = gpa;
-	}
+    public void setGpa(final double gpa) {
+        this.gpa = gpa;
+    }
 
-	public String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -132,14 +124,6 @@ public final class Cv {
 
     public void setHomeAddress(final String homeAddress) {
         this.homeAddress = homeAddress;
-    }
-
-    public String getJobAddress() {
-        return jobAddress;
-    }
-
-    public void setJobAddress(final String jobAddress) {
-        this.jobAddress = jobAddress;
     }
 
     public String getPhone() {
@@ -174,14 +158,6 @@ public final class Cv {
         this.skills = skills;
     }
 
-    public Map<String, Integer> getAdditionalSkills() {
-        return additionalSkills;
-    }
-
-    public void setAdditionalSkills(final Map<String, Integer> additionalSkills) {
-        this.additionalSkills = additionalSkills;
-    }
-
     public List<String> getTags() {
         return tags;
     }
@@ -191,6 +167,7 @@ public final class Cv {
     }
 
     public void print() {
-        System.out.println(fullName + birthYear + gpa + email + description + homeAddress + jobAddress + phone + website + education + skills + additionalSkills + tags);
+        System.out.println(fullName + birthYear + gpa + email + description + homeAddress + phone + website + education
+                + skills + tags);
     }
 }
