@@ -3,6 +3,7 @@ package edu.ieu.tr.cvm;
 import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.stream.Stream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -32,6 +33,13 @@ public final class Exporter {
             stream.newLineAtOffset(0, -padding);
             stream.showText("GPA: " + cv.getGpa());
             stream.newLine();
+            stream.newLineAtOffset(0, -padding);
+            stream.showText("Email: " + cv.getEmail());
+            stream.newLine();
+            stream.newLineAtOffset(0, -padding);
+            stream.showText("Description: " + cv.getDescription());
+            stream.newLine();
+            
             stream.newLineAtOffset(0, -padding);
             stream.showText("Home address: " + cv.getHomeAddress());
             stream.newLine();
@@ -99,6 +107,8 @@ public final class Exporter {
 						e.printStackTrace();
 					}
                 });
+
+            stream.showText("EDUCATION:");
             cv.getEducation().forEach((k, v) -> {
                     try {
                         stream.newLine();
@@ -108,6 +118,17 @@ public final class Exporter {
 						e.printStackTrace();
 					}
                 });
+            stream.showText("EDUCATION:");
+            cv.getEducation().forEach((k, v) -> {
+                    try {
+                        stream.newLine();
+						stream.newLineAtOffset(0, -padding);
+                        stream.showText(k + ", register year: " + v);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+                });
+
         }
         stream.endText();
         stream.close();
