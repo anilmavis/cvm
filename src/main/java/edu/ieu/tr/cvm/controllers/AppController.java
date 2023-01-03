@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Map; 
 import java.util.Optional;
-
 import edu.ieu.tr.cvm.AcademicCv;
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
@@ -128,7 +125,11 @@ public final class AppController {
             }
         });
         database.getAll().forEach((cv) -> {
-            root.getChildren().add(new TreeItem<Cv>(cv));
+                if (cv instanceof AcademicCv academicCv) {
+                    academicRoot.getChildren().add(new TreeItem<Cv>(academicCv));
+                } else {
+                    root.getChildren().add(new TreeItem<Cv>(cv));
+                }
         });
         database.getLocations().forEach(s -> locationVBox.getChildren().add(new CheckBox(s)));
         database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
@@ -222,24 +223,33 @@ public final class AppController {
                             skillsVBox.getChildren().add(new CheckBox(skills.getText()));
                             skillsTitledPane.setContent(skillsVBox);
                             Map<String, Integer> newPublications = new HashMap<>();
-                            Arrays.asList(publications.getText().trim().split("\r")).forEach(line -> {
+                            Arrays.asList(publications.getText().split("\r")).forEach(line -> {
                                 String[] values = line.trim().split(",");
+                                for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newPublications.put(values[0], Integer.parseInt(values[1]));
                                 }
                             });
 
                             Map<String, Integer> newEducation = new HashMap<>();
-                            Arrays.asList(education.getText().trim().split("\r")).forEach(line -> {
+                            Arrays.asList(education.getText().split("\r")).forEach(line -> {
                                 String[] values = line.trim().split(",");
+                                for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newEducation.put(values[0], Integer.parseInt(values[1]));
                                 }
                             });
 
                             Map<String, Integer> newSkills = new HashMap<>();
-                            Arrays.asList(skills.getText().trim().split("\r")).forEach(line -> {
+                            Arrays.asList(skills.getText().split("\r")).forEach(line -> {
                                 String[] values = line.trim().split(",");
+                                for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newSkills.put(values[0], Integer.parseInt(values[1]));
                                 }
@@ -247,6 +257,10 @@ public final class AppController {
 
                             Cv cvv; // new edited cv
                             if (cv instanceof AcademicCv) {
+                                List<String> newTags = Arrays.asList(tags.getText().split("\r"));
+                                for (int i = 0; i < newTags.size(); i++) {
+                                    newTags.set(i, newTags.get(i).trim());
+                                }
                                 cvv = new AcademicCv(cv.getId(), fullName.getText(),
                                         Integer.parseInt(birthYear.getText()),
                                         Float.parseFloat(gpa.getText()),
@@ -259,8 +273,12 @@ public final class AppController {
                                         newEducation,
                                         newSkills,
                                         newPublications,
-                                        Arrays.asList(tags.getText().trim().split("\r")));
+                                                     newTags);
                             } else {
+                                List<String> newTags = Arrays.asList(tags.getText().split("\r"));
+                                for (int i = 0; i < newTags.size(); i++) {
+                                    newTags.set(i, newTags.get(i).trim());
+                                }
                                 cvv = new Cv(cv.getId(), fullName.getText(),
                                         Integer.parseInt(birthYear.getText()),
                                         Float.parseFloat(gpa.getText()),
@@ -273,7 +291,7 @@ public final class AppController {
                                         newEducation,
                                         newSkills,
 
-                                        Arrays.asList(tags.getText().trim().split("\r")));
+                                        newTags);
                             }
                             database.update(cvv);
                             treeView.getSelectionModel().getSelectedItem().setValue(cvv);
@@ -391,16 +409,22 @@ public final class AppController {
                         locationTitledPane.setContent(locationVBox);
                         Cv cv;
                         Map<String, Integer> newEducation = new HashMap<>();
-                        Arrays.asList(education.getText().trim().split("\r")).forEach(line -> {
+                        Arrays.asList(education.getText().split("\r")).forEach(line -> {
                             String[] values = line.trim().split(",");
+                            for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].trim();
+                                }
                             if (values.length > 1) {
                                 newEducation.put(values[0], Integer.parseInt(values[1]));
                             }
                         });
 
                         Map<String, Integer> newSkills = new HashMap<>();
-                        Arrays.asList(skills.getText().trim().split("\r")).forEach(line -> {
+                        Arrays.asList(skills.getText().split("\r")).forEach(line -> {
                             String[] values = line.trim().split(",");
+                            for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].trim();
+                                }
                             if (values.length > 1) {
                                 newSkills.put(values[0], Integer.parseInt(values[1]));
                             }
@@ -408,12 +432,19 @@ public final class AppController {
                         if (status.getSelectionModel().getSelectedItem() == "Academician") {
 
                             Map<String, Integer> newPublications = new HashMap<>();
-                            Arrays.asList(publications.getText().trim().split("\r")).forEach(line -> {
+                            Arrays.asList(publications.getText().split("\r")).forEach(line -> {
                                 String[] values = line.trim().split(",");
+                                for (int i = 0; i < values.length; i++) {
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newPublications.put(values[0], Integer.parseInt(values[1]));
                                 }
                             });
+                            List<String> newTags = Arrays.asList(tags.getText().split("\r"));
+                            for (int i = 0; i < newTags.size(); i++) {
+                                newTags.set(i, newTags.get(i).trim());
+                                    }
 
                             cv = new AcademicCv(fullName.getText(),
                                     Integer.parseInt(birthYear.getText()),
@@ -427,8 +458,13 @@ public final class AppController {
                                     newEducation,
                                     newSkills,
                                     newPublications,
-                                    Arrays.asList(tags.getText().trim().split("\r")));
+                                                newTags
+                                    );
                         } else {
+                            List<String> newTags = Arrays.asList(tags.getText().split("\r"));
+                            for (int i = 0; i < newTags.size(); i++) {
+                                newTags.set(i, newTags.get(i).trim());
+                                    }
                             cv = new Cv(fullName.getText(),
                                     Integer.parseInt(birthYear.getText()),
                                     Float.parseFloat(gpa.getText()),
@@ -440,7 +476,7 @@ public final class AppController {
                                     website.getText(),
                                     newEducation,
                                     newSkills,
-                                    Arrays.asList(tags.getText().trim().split("\r")));
+                                    newTags);
                         }
                         return database.insert(cv);
                     } catch (NumberFormatException | SQLException e) {
