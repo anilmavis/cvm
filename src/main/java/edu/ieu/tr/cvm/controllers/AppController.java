@@ -130,7 +130,7 @@ public final class AppController {
                 } else {
                     root.getChildren().add(new TreeItem<Cv>(cv));
                 }
-        });
+            });//
         database.getLocations().forEach(s -> locationVBox.getChildren().add(new CheckBox(s)));
         database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
         treeView.setOnMouseClicked(event -> {
