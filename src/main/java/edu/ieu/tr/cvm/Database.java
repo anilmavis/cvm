@@ -184,7 +184,7 @@ public final class Database {
         for (String s :queries) {
             query.append(s);
         }
-        return toObject("select * from cv where "+ query);
+        return toObject("select * from cv where "+ query + " 1+1");
     }
 
     public List<Cv> filterAllForCheckbox(String tableName, ArrayList<String> queries) throws SQLException {
@@ -193,7 +193,7 @@ public final class Database {
             query.append(s);
         }
         
-        return toObject("select * from cv where id in (select cv_id from " + tableName + " where " + query + ")");
+        return toObject("select * from cv where id in (select cv_id from " + tableName + " where " + query + "1=1)");
     }
 
     public String educationToString(final Cv cv) {

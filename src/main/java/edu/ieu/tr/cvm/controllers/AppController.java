@@ -186,14 +186,14 @@ public final class AppController {
                 website.setPromptText("website");
                 box.getChildren().add(website);
                 StringBuilder educationString = new StringBuilder();
-                cv.getEducation().forEach((k, v) -> educationString.append(k + ", " + v + "\r"));
+                cv.getEducation().forEach((k, v) -> educationString.append(k + ", " + v + "\n"));
                 TextArea education = new TextArea(educationString.toString());
                 box.getChildren().add(education);
                 education.setPromptText("education\rname 1, register year 1\rname 2, register year 2\r...");
 
 
                 StringBuilder skillsString = new StringBuilder();
-                cv.getSkills().forEach((k, v) -> skillsString.append(k + ", " + v + "\r"));
+                cv.getSkills().forEach((k, v) -> skillsString.append(k + ", " + v + "\n"));
                 TextArea skills = new TextArea(skillsString.toString());
                 skills.setPromptText("skills\rname 1, level 1\rname 2, level 2\r...");
                 box.getChildren().add(skills);
@@ -203,13 +203,13 @@ public final class AppController {
                 final TextArea publications = new TextArea();
                 if (cv instanceof AcademicCv academicCv) {
 
-                    academicCv.getPublications().forEach((k, v) -> publicationsString.append(k + ", " + v + "\r"));
+                    academicCv.getPublications().forEach((k, v) -> publicationsString.append(k + ", " + v + "\n"));
                     publications.setText(publicationsString.toString());
                     publications.setPromptText("publications\rname 1, year 1\rname 2, year 2\r...");
                     box.getChildren().add(publications);
                 }
                 StringBuilder tagsString = new StringBuilder();
-                cv.getTags().forEach(tag -> tagsString.append(tag + "\r"));
+                cv.getTags().forEach(tag -> tagsString.append(tag + "\n"));
                 TextArea tags = new TextArea(tagsString.toString());
                 tags.setPromptText("tags\rtag 1\rtag 2\r...");
                 box.getChildren().add(tags);
@@ -226,24 +226,24 @@ public final class AppController {
                             skillsVBox.getChildren().add(new CheckBox(skills.getText()));
                             skillsTitledPane.setContent(skillsVBox);
                             Map<String, Integer> newPublications = new HashMap<>();
-                            Arrays.asList(publications.getText().trim().split("\r")).forEach(line -> {
-                                String[] values = line.trim().split(",");
+                            Arrays.asList(publications.getText().split("\n")).forEach(line -> {
+                                String[] values = line.split(",");
                                 if (values.length > 1) {
                                     newPublications.put(values[0], Integer.parseInt(values[1]));
                                 }
                             });
 
                             Map<String, Integer> newEducation = new HashMap<>();
-                            Arrays.asList(education.getText().trim().split("\r")).forEach(line -> {
-                                String[] values = line.trim().split(",");
+                            Arrays.asList(education.getText().split("\n")).forEach(line -> {
+                                String[] values = line.split(",");
                                 if (values.length > 1) {
                                     newEducation.put(values[0], Integer.parseInt(values[1]));
                                 }
                             });
 
                             Map<String, Integer> newSkills = new HashMap<>();
-                            Arrays.asList(skills.getText().trim().split("\r")).forEach(line -> {
-                                String[] values = line.trim().split(",");
+                            Arrays.asList(skills.getText().split("\n")).forEach(line -> {
+                                String[] values = line.split(",");
                                 if (values.length > 1) {
                                     newSkills.put(values[0], Integer.parseInt(values[1]));
                                 }
@@ -263,7 +263,7 @@ public final class AppController {
                                         newEducation,
                                         newSkills,
                                         newPublications,
-                                        Arrays.asList(tags.getText().trim().split("\r")));
+                                        Arrays.asList(tags.getText().split("\n")));
                             } else {
                                 cvv = new Cv(cv.getId(), fullName.getText(),
                                         Integer.parseInt(birthYear.getText()),
@@ -277,7 +277,7 @@ public final class AppController {
                                         newEducation,
                                         newSkills,
 
-                                        Arrays.asList(tags.getText().trim().split("\r")));
+                                        Arrays.asList(tags.getText().split("\n")));
                             }
                             database.update(cvv);
                             treeView.getSelectionModel().getSelectedItem().setValue(cvv);
@@ -395,16 +395,16 @@ public final class AppController {
                         locationTitledPane.setContent(locationVBox);
                         Cv cv;
                         Map<String, Integer> newEducation = new HashMap<>();
-                        Arrays.asList(education.getText().trim().split("\r")).forEach(line -> {
-                            String[] values = line.trim().split(",");
+                        Arrays.asList(education.getText().split("\n")).forEach(line -> {
+                            String[] values = line.split(",");
                             if (values.length > 1) {
                                 newEducation.put(values[0], Integer.parseInt(values[1]));
                             }
                         });
 
                         Map<String, Integer> newSkills = new HashMap<>();
-                        Arrays.asList(skills.getText().trim().split("\r")).forEach(line -> {
-                            String[] values = line.trim().split(",");
+                        Arrays.asList(skills.getText().split("\n")).forEach(line -> {
+                            String[] values = line.split(",");
                             if (values.length > 1) {
                                 newSkills.put(values[0], Integer.parseInt(values[1]));
                             }
@@ -412,8 +412,8 @@ public final class AppController {
                         if (status.getSelectionModel().getSelectedItem() == "Academician") {
 
                             Map<String, Integer> newPublications = new HashMap<>();
-                            Arrays.asList(publications.getText().trim().split("\r")).forEach(line -> {
-                                String[] values = line.trim().split(",");
+                            Arrays.asList(publications.getText().split("\n")).forEach(line -> {
+                                String[] values = line.split(",");
                                 if (values.length > 1) {
                                     newPublications.put(values[0], Integer.parseInt(values[1]));
                                 }
@@ -431,7 +431,7 @@ public final class AppController {
                                     newEducation,
                                     newSkills,
                                     newPublications,
-                                    Arrays.asList(tags.getText().trim().split("\r")));
+                                    Arrays.asList(tags.getText().split("\n")));
                         } else {
                             cv = new Cv(fullName.getText(),
                                     Integer.parseInt(birthYear.getText()),
@@ -444,15 +444,19 @@ public final class AppController {
                                     website.getText(),
                                     newEducation,
                                     newSkills,
-                                    Arrays.asList(tags.getText().trim().split("\r")));
+                                    Arrays.asList(tags.getText().split("\n")));
                         }
-                        return database.insert(cv);
+                        Cv cvs=database.insert(cv);
+                        skillsVBox.getChildren().clear();
+                        database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
+                        return cvs;
                     } catch (NumberFormatException | SQLException e) {
                         e.printStackTrace();
                         Alert alert = new Alert(AlertType.ERROR);
                         alert.setContentText(e.getMessage());
                         alert.show();
                     }
+
                 }
                 return null;
             });
@@ -501,7 +505,7 @@ public final class AppController {
 
                 if (!highestGpaTextField.getText().isEmpty() && !lowestGpaTextField.getText().isEmpty()) {
                     queries.add("gpa <= " + highestGpaTextField.getText() + " and gpa >= "
-                            + lowestGpaTextField.getText() + " ");
+                            + lowestGpaTextField.getText() + " and ");
                 }
                 
                 // if nothing is selected on filter accordion, the tree view is cleared. solve this problem later
@@ -528,19 +532,15 @@ public final class AppController {
                 
                 skillsVBox.getChildren().forEach(skill -> {
                     CheckBox checkBox = (CheckBox) skill;
-                    int counter = 0;
+
                     if (checkBox.isSelected()) {
-                        counter++;
-                        skillsQueries.add("name = '" + checkBox.getText() + "'");
-                        skillsQueries.add(" and ");
+
+                        skillsQueries.add("name = '" + checkBox.getText() + "' and ");
+
                     }
-                    if (counter == 0) {
-                        skillsQueries.clear();
-                    }
+
                 });
-                if (skillsQueries.size() > 0) {
-skillsQueries.remove(skillsQueries.get(skillsQueries.size() - 1));
-                }
+
                 if (skillsQueries.size() != 0) {
                 database.filterAllForCheckbox("skill", skillsQueries).forEach(cv -> {
                     if (cv instanceof AcademicCv academicCv) {
