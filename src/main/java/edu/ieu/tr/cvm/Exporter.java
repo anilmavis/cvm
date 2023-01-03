@@ -74,6 +74,12 @@ public final class Exporter {
             stream.showText("GPA: " + cv.getGpa());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
+            stream.showText("Email: " + cv.getHomeAddress());
+            stream.newLine();
+            stream.newLineAtOffset(0, -padding);
+            stream.showText("Description: " + cv.getHomeAddress());
+            stream.newLine();
+            stream.newLineAtOffset(0, -padding);
             stream.showText("Home address: " + cv.getHomeAddress());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
