@@ -492,8 +492,16 @@ public final class AppController {
                 if (!highestGpaTextField.getText().isEmpty() && !lowestGpaTextField.getText().isEmpty()){
                     queries.add("gpa <= "+highestGpaTextField.getText()+" and gpa >= "+ lowestGpaTextField.getText()+" ");
                 }
-
-                database.filterAll(queries).forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
+root.getChildren().clear();
+academicRoot.getChildren().clear();
+database.filterAll(queries).forEach(cv -> {
+        if (cv instanceof AcademicCv academicCv) {
+            academicRoot.getChildren().add(new TreeItem<>(academicCv));
+        } else {
+            root.getChildren().add(new TreeItem<>(cv));
+        }
+        
+    });
 
 
 

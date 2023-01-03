@@ -74,6 +74,7 @@ public final class Database {
 
     private List<Cv> toObject(String query) throws SQLException {
         final Map<Integer, Cv> cvs = new HashMap<>();
+        System.out.println(query);
         final PreparedStatement statement1 = connection.prepareStatement(query);
         final ResultSet set1 = statement1.executeQuery();
         while (set1.next()) {
@@ -114,9 +115,14 @@ public final class Database {
         final ResultSet set2 = statement2.executeQuery();
 
         while (set2.next()) {
-            final Map<String, Integer> skills = new HashMap<>();
-            skills.put(set2.getString(3), set2.getInt(4));
-            cvs.get(set2.getInt(2)).setSkills(skills);
+            
+            
+            if (cvs.get(set2.getInt(2)) != null) {
+                final Map<String, Integer> skills = new HashMap<>();
+                cvs.get(set2.getInt(2)).setSkills(skills);
+                skills.put(set2.getString(3), set2.getInt(4));
+            }
+            
         }
         statement2.close();
 
@@ -124,11 +130,12 @@ public final class Database {
         final ResultSet set3 = statement3.executeQuery();
 
         while (set3.next()) {
+            if (cvs.get(set3.getInt(2)) != null) {
             if (cvs.get(set3.getInt(2)) instanceof AcademicCv academicCv) {
             final Map<String, Integer> publications = new HashMap<>();
             publications.put(set3.getString(3), set3.getInt(4));
             academicCv.setPublications(publications);
-            }
+            }}
         }
         statement3.close();
 
@@ -136,9 +143,11 @@ public final class Database {
         final ResultSet set5 = statement5.executeQuery();
 
         while (set5.next()) {
+            if (cvs.get(set5.getInt(2)) != null) {
             final Map<String, Integer> education = new HashMap<>();
             education.put(set5.getString(3), set5.getInt(4));
             cvs.get(set5.getInt(2)).setSkills(education);
+            }
         }
         statement5.close();
 
@@ -146,9 +155,11 @@ public final class Database {
         final ResultSet set4 = statement4.executeQuery();
 
         while (set4.next()) {
+            if (cvs.get(set4.getInt(2)) != null) {
             final List<String> tags = new ArrayList<>();
             tags.add(set4.getString(3));
             cvs.get(set4.getInt(2)).setTags(tags);
+            }
         }
         statement4.close();
         new ArrayList<>(cvs.values()).forEach(cv -> cv.print());
