@@ -694,13 +694,40 @@ public final class AppController {
          */
 
         menuItemHelp.setOnAction((value) -> {
-            Alert alert = new Alert(AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Help");
-            alert.setHeaderText(null);
-            alert.setContentText(
-                    "Aenean rutrum ullamcorper rutrum. Mauris placerat neque id odio porta sodales. Morbi mollis, turpis vitae tempus elementum, turpis est iaculis erat, nec mattis enim ligula vitae sem. Nam feugiat hendrerit lectus eget congue. Vestibulum enim libero, elementum at tortor et, consequat imperdiet purus. Integer eget nunc suscipit, molestie metus et, iaculis massa. Vestibulum imperdiet neque ut pharetra iaculis. Etiam id imperdiet nisi. Vivamus nec dapibus augue. Nam euismod, nibh eu dictum imperdiet, neque purus tincidunt sapien, at eleifend nibh dolor et felis.");
-            alert.showAndWait();
+            alert.setHeaderText("Help");
+            alert.setContentText("Welcome to CVM");
+            TextArea area = new TextArea(menuItemHelp.getText());
+            area.setText("Welcome to CVM (CV Manager)! Where you can store both student and academic CVs and filter them according to your needs for an employee.\n" +
+                    "\n" +
+                    "Created CVs in the system have attributes depending on their types which are academic and student. The user can add and delete CVs, edit their attributes to update and filter them with the attributes such as major, GPA, school, skills etc. and their tags. The user can also search any word within the CVs and find related candidate’s CV and tag the CV.\n" +
+                    "\n" +
+                    "How To Create a CV?\n" +
+                    "Click the (+) button on the left-side of the page. A new page will open for you. First, select the type of the CV, located on the top, you want to add/fill in. You can select either a student or academician. You will see an empty CV page waiting to be filled with the wanted information. After filling the required information click OK. Your CV has been saved.\n" +
+                    "\n" +
+                    "How To Delete a CV?\n" +
+                    "On the left-side of the page you can see the saved CV’s under the types Student and Academician. To delete a CV, just select the CV you want to delete by clicking on it once and then press the “Delete” button which is located in the middle of the page. The CV you have selected will be deleted.\n" +
+                    "\n" +
+                    "How To Edit a CV?\n" +
+                    "On the left-side of the page you can see the saved CV’s under the types Student and Academician. To edit a CV, just select the CV you want to edit by clicking on it and then press the “Edit” button which is located in the middle of the page. You will see a page like the adding page but with information filled. Just edit the information you want and then press the “Save” button. The CV will be edited.\n" +
+                    "\n" +
+                    "How To Use the Search Bar?\n" +
+                    "You can use the search bar by writing anything you want from the name of the applicant to the name of the schools, skills, locations etc. The CVs would be sorted out and shown to you on the rectangular area that is below the search bar, according to your searching. There will be no need to press any button to search as the search bar gets activated even typing one letter.\n" +
+                    "\n" +
+                    "How To Filter CVs?\n" +
+                    "On the right-side of the page there is the filter section. After you click on the “Filter” button you will see many options to filter. You can click each filtering option and set your desired qualifications for an applicant. On the birth year and GPA filters you can enter an interval of numbers from lowest to highest. For the other filters such as skills, school, major etc. you will see checkboxes named with the available features of the applicants within the database. You can simply check the checkboxes you want to filter. After these selections just press the “Filter” button down below. You will see the CVs that compile with your selections on the left-side of the page.\n" +
+                    "\n" +
+                    "How To View CV?\n" +
+                    "To view a CV, just click on the person you want to view it’s CV twice on the left-side of the page and then you can see the CV of it on the new page that will be opened.\n" +
+                    "\n" +
+                    "How To Export a CV?\n" +
+                    "You can export a CV to PDF by selecting the CV you want to export located on the left-side of the page and then clicking on the “Export” button on the middle of the page. You can see the PDF version of the CV after saving it to your computer.\n");
+            area.setWrapText(true);
+            area.setEditable(false);
 
+            alert.getDialogPane().setExpandableContent(area);
+            alert.showAndWait();
         });
 
         menuItemDelete.setOnAction((value) -> {

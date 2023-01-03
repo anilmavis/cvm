@@ -1,2 +1,2 @@
-* cvm
-cv manager
+* CVManager (CVM)
+https://github.com/anilmavis/cvm.wiki.git
