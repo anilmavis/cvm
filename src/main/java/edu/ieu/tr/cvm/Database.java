@@ -79,7 +79,8 @@ public final class Database {
         final ResultSet set1 = statement1.executeQuery();
         while (set1.next()) {
             if (set1.getString(8) != null) {
-                
+
+
             cvs.put(set1.getInt(1), new AcademicCv(set1.getInt(1),
                     set1.getString(2),
                     set1.getInt(3),
@@ -146,7 +147,7 @@ public final class Database {
             if (cvs.get(set5.getInt(2)) != null) {
             final Map<String, Integer> education = new HashMap<>();
             education.put(set5.getString(3), set5.getInt(4));
-            cvs.get(set5.getInt(2)).setSkills(education);
+            cvs.get(set5.getInt(2)).setEducation(education);
             }
         }
         statement5.close();

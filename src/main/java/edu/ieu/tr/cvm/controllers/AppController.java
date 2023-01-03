@@ -181,17 +181,20 @@ public final class AppController {
                 TextField website = new TextField(cv.getWebsite());
                 website.setPromptText("website");
                 box.getChildren().add(website);
-                Label label = new Label("Education:");
                 StringBuilder educationString = new StringBuilder();
                 cv.getEducation().forEach((k, v) -> educationString.append(k + ", " + v + "\r"));
                 TextArea education = new TextArea(educationString.toString());
                 box.getChildren().add(education);
                 education.setPromptText("education\rname 1, register year 1\rname 2, register year 2\r...");
+
+
                 StringBuilder skillsString = new StringBuilder();
                 cv.getSkills().forEach((k, v) -> skillsString.append(k + ", " + v + "\r"));
                 TextArea skills = new TextArea(skillsString.toString());
                 skills.setPromptText("skills\rname 1, level 1\rname 2, level 2\r...");
                 box.getChildren().add(skills);
+
+
                 StringBuilder publicationsString = new StringBuilder();
                 final TextArea publications = new TextArea();
                 if (cv instanceof AcademicCv academicCv) {
@@ -216,6 +219,8 @@ public final class AppController {
                             locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));
                             locationTitledPane.setContent(locationVBox);
 
+                            skillsVBox.getChildren().add(new CheckBox(skills.getText()));
+                            skillsTitledPane.setContent(skillsVBox);
                             Map<String, Integer> newPublications = new HashMap<>();
                             Arrays.asList(publications.getText().trim().split("\r")).forEach(line -> {
                                 String[] values = line.trim().split(",");

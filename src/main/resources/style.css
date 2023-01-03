@@ -61,6 +61,16 @@
     -fx-padding: 0.25em ;
 }
 
+.check-box:selected .box {
+
+-fx-background-color: #cdd5ee;
+}
+.check-box .box{
+
+ -fx-background-color: #e6eaf7  ;
+    -fx-border-color:  #78829f;
+    -fx-border-radius: 5px;
+}
 .titled-pane > .title {
     -fx-background-color:   #cdd5ee;
     -fx-border-color:  #78829f;

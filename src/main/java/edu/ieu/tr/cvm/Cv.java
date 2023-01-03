@@ -137,6 +137,24 @@ public class Cv {
         return phone;
     }
 
+    @Override
+    public String toString() {
+        return "Cv{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", birthYear=" + birthYear +
+                ", gpa=" + gpa +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", homeAddress='" + homeAddress + '\'' +
+                ", phone='" + phone + '\'' +
+                ", website='" + website + '\'' +
+                ", education=" + education +
+                ", skills=" + skills +
+                ", tags=" + tags +
+                '}';
+    }
+
     public void setPhone(final String phone) {
         this.phone = phone;
     }
