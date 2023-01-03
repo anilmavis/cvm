@@ -23,34 +23,37 @@ public final class Exporter {
         int height = (int) page.getMediaBox().getHeight();
         stream.setFont(PDType1Font.TIMES_ROMAN, padding);
         stream.beginText();
+        
         if (c instanceof AcademicCv cv) {
-            stream.newLineAtOffset(width / 4, height - padding);
-            stream.showText("Full name: " + cv.getFullName());
+            stream.newLineAtOffset(width / 8, height - padding);
+            
+            stream.showText("• Full name: " + cv.getFullName());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Birth year: " + cv.getBirthYear());
+            stream.showText("• Birth year: " + cv.getBirthYear());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("GPA: " + cv.getGpa());
+            stream.showText("• GPA: " + cv.getGpa());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Email: " + cv.getEmail());
+            stream.showText("• Email: " + cv.getEmail());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Description: " + cv.getDescription());
+            stream.showText("• Description: " + cv.getDescription());
             stream.newLine();
             
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Home address: " + cv.getHomeAddress());
+            stream.showText("• Home address: " + cv.getHomeAddress());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Job address: " + cv.getJobAddress());
+            stream.showText("• Job address: " + cv.getJobAddress());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Phone: " + cv.getPhone());
+            stream.showText("• Phone: " + cv.getPhone());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Website: " + cv.getWebsite());
+            stream.showText("• Website: " + cv.getWebsite());
+            stream.showText("• SKILLS:");
             cv.getSkills().forEach((k, v) -> {
                     try {
                         stream.newLine();
@@ -60,11 +63,22 @@ public final class Exporter {
 						e.printStackTrace();
 					}
                 });
+            stream.showText("• EDUCATION:");
             cv.getEducation().forEach((k, v) -> {
                     try {
                         stream.newLine();
 						stream.newLineAtOffset(0, -padding);
                         stream.showText(k + ", register year: " + v);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+                });
+            stream.showText("• PUBLICATIONS:");
+            cv.getPublications().forEach((k, v) -> {
+                    try {
+                        stream.newLine();
+						stream.newLineAtOffset(0, -padding);
+                        stream.showText(k + ", year: " + v);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -72,32 +86,32 @@ public final class Exporter {
         } else {
             Cv cv = c;
             System.out.println(width + " " + height);
-            stream.newLineAtOffset(width / 4, height - padding);
-            stream.showText("Full name: " + cv.getFullName());
+            stream.newLineAtOffset(width / 8, height - padding);
+            stream.showText("• Full name: " + cv.getFullName());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Birth year: " + cv.getBirthYear());
+            stream.showText("• Birth year: " + cv.getBirthYear());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("GPA: " + cv.getGpa());
+            stream.showText("• GPA: " + cv.getGpa());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Email: " + cv.getHomeAddress());
+            stream.showText("• Email: " + cv.getHomeAddress());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Description: " + cv.getHomeAddress());
+            stream.showText("• Description: " + cv.getHomeAddress());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Home address: " + cv.getHomeAddress());
+            stream.showText("• Home address: " + cv.getHomeAddress());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Phone: " + cv.getPhone());
+            stream.showText("• Phone: " + cv.getPhone());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("Website: " + cv.getWebsite());
+            stream.showText("• Website: " + cv.getWebsite());
             stream.newLine();
             stream.newLineAtOffset(0, -padding);
-            stream.showText("SKILLS:");
+            stream.showText("• SKILLS:");
             cv.getSkills().forEach((k, v) -> {
                     try {
                         stream.newLine();
@@ -107,8 +121,9 @@ public final class Exporter {
 						e.printStackTrace();
 					}
                 });
-
-            stream.showText("EDUCATION:");
+stream.newLineAtOffset(0, -padding);
+            stream.newLine();
+            stream.showText("• EDUCATION:");
             cv.getEducation().forEach((k, v) -> {
                     try {
                         stream.newLine();
@@ -118,16 +133,8 @@ public final class Exporter {
 						e.printStackTrace();
 					}
                 });
-            stream.showText("EDUCATION:");
-            cv.getEducation().forEach((k, v) -> {
-                    try {
-                        stream.newLine();
-						stream.newLineAtOffset(0, -padding);
-                        stream.showText(k + ", register year: " + v);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-                });
+            
+            
 
         }
         stream.endText();
