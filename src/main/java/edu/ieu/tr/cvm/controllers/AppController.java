@@ -81,6 +81,29 @@ public final class AppController {
     private TitledPane skillsTitledPane;
     @FXML
     private VBox skillsVBox;
+
+    //publications
+
+   @FXML
+    private TitledPane publicationsTitledPane;
+    @FXML
+    private VBox publicationsVBox;
+
+
+    //tags
+    @FXML
+    private TitledPane tagsTitledPane;
+    @FXML
+    private VBox tagsVBox;
+
+
+    //school
+
+    @FXML
+    private TitledPane schoolTitledPane;
+    @FXML
+    private VBox schoolVBox;
+
     @FXML
     private Button filterButton;
 
@@ -136,6 +159,12 @@ public final class AppController {
         });
         database.getLocations().forEach(s -> locationVBox.getChildren().add(new CheckBox(s)));
         database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
+        database.getSchool().forEach(s -> schoolVBox.getChildren().add(new CheckBox(s)));
+        database.getPublications().forEach(s -> publicationsVBox.getChildren().add(new CheckBox(s)));
+        database.getTags().forEach(s -> tagsVBox.getChildren().add(new CheckBox(s)));
+
+
+
         treeView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
 
@@ -225,6 +254,18 @@ public final class AppController {
 
                             skillsVBox.getChildren().add(new CheckBox(skills.getText()));
                             skillsTitledPane.setContent(skillsVBox);
+
+                            schoolVBox.getChildren().add(new CheckBox(education.getText()));
+                            schoolTitledPane.setContent(schoolVBox);
+
+                            tagsVBox.getChildren().add(new CheckBox(tags.getText()));
+                            tagsTitledPane.setContent(tagsVBox);
+
+                            publicationsVBox.getChildren().add(new CheckBox(publications.getText()));
+                            publicationsTitledPane.setContent(publicationsVBox);
+
+
+
                             Map<String, Integer> newPublications = new HashMap<>();
                             Arrays.asList(publications.getText().split("\n")).forEach(line -> {
                                 String[] values = line.split(",");
@@ -448,7 +489,21 @@ public final class AppController {
                         }
                         Cv cvs=database.insert(cv);
                         skillsVBox.getChildren().clear();
+                        locationVBox.getChildren().clear();
+                        schoolVBox.getChildren().clear();
+                        publicationsVBox.getChildren().clear();
+                        tagsVBox.getChildren().clear();
+
                         database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
+                        database.getLocations().forEach(s -> locationVBox.getChildren().add(new CheckBox(s)));
+                        database.getTags().forEach(s ->tagsVBox.getChildren().add(new CheckBox(s)));
+                        database.getSchool().forEach(s -> schoolVBox.getChildren().add(new CheckBox(s)));
+                        database.getPublications().forEach(s -> publicationsVBox.getChildren().add(new CheckBox(s)));
+
+
+
+
+
                         return cvs;
                     } catch (NumberFormatException | SQLException e) {
                         e.printStackTrace();
@@ -495,64 +550,124 @@ public final class AppController {
             try {
                 if (!nameFilter.getText().isEmpty()) {
 
-                    queries.add("fullName like '%" + nameFilter.getText() + "%' and ");
+                    queries.add("cv.fullName like '%" + nameFilter.getText() + "%' and ");
 
                 }
                 if (!highestBirthTextField.getText().isEmpty() && !lowestBirthTextField.getText().isEmpty()) {
-                    queries.add("birthYear <= " + highestBirthTextField.getText() + " and birthYear >= "
+                    queries.add("cv.birthYear <= " + highestBirthTextField.getText() + " and cv.birthYear >= "
                             + lowestBirthTextField.getText() + " and ");
                 }
 
                 if (!highestGpaTextField.getText().isEmpty() && !lowestGpaTextField.getText().isEmpty()) {
-                    queries.add("gpa <= " + highestGpaTextField.getText() + " and gpa >= "
+                    queries.add("cv.gpa <= " + highestGpaTextField.getText() + " and cv.gpa >= "
                             + lowestGpaTextField.getText() + " and ");
                 }
                 
                 // if nothing is selected on filter accordion, the tree view is cleared. solve this problem later
                 root.getChildren().clear();
                 academicRoot.getChildren().clear();
-                
-                if (queries.size() != 0) {
-                database.filterAll(queries).forEach(cv -> {
-                    if (cv instanceof AcademicCv academicCv) {
-                        academicRoot.getChildren().add(new TreeItem<>(academicCv));
-                    } else {
-                        root.getChildren().add(new TreeItem<>(cv));
-                    }
-                    textField.clear();
 
-                });
-                }
 
 
 
                 // SKILLS BEGIN
+                queries.add("1=1 ");
 
-                ArrayList<String> skillsQueries = new ArrayList<>();
-                
                 skillsVBox.getChildren().forEach(skill -> {
                     CheckBox checkBox = (CheckBox) skill;
 
                     if (checkBox.isSelected()) {
 
-                        skillsQueries.add("name = '" + checkBox.getText() + "' and ");
+                        queries.add(" and cv.id in (select skill.cv_id from skill where skill.name = '" + checkBox.getText() + "' ) ");
+
 
                     }
 
                 });
+                //queries.add(") and ");
 
-                if (skillsQueries.size() != 0) {
-                database.filterAllForCheckbox("skill", skillsQueries).forEach(cv -> {
-                    if (cv instanceof AcademicCv academicCv) {
-                        academicRoot.getChildren().add(new TreeItem<>(academicCv));
-                    } else {
-                        root.getChildren().add(new TreeItem<>(cv));
-                    }
-                    textField.clear();
-                });
-                }
+
 
                 // SKILLS END
+
+
+
+              //  queries.add("and cv.id in (select education.cv_id from education where 1=1  ");
+
+
+                schoolVBox.getChildren().forEach(school -> {
+                    CheckBox schoolCheckBox = (CheckBox) school;
+
+                    if (schoolCheckBox.isSelected()) {
+
+                        queries.add("and cv.id in (select education.cv_id from education where education.name = '" + schoolCheckBox.getText() + "') ");
+
+                    }
+
+                });
+                queries.add(" and ");
+
+
+                // SCHOOL END
+
+
+
+
+
+                publicationsVBox.getChildren().forEach(publication -> {
+                    CheckBox publicationCheckBox = (CheckBox) publication;
+
+                    if (publicationCheckBox.isSelected()) {
+
+                        queries.add("publications.name = '" + publicationCheckBox.getText() + "' and ");
+
+                    }
+
+                });
+
+
+
+                //PUBLICATION END
+
+
+
+
+
+                    tagsVBox.getChildren().forEach(tags -> {
+                    CheckBox tagsCheckBox = (CheckBox) tags;
+
+                    if (tagsCheckBox.isSelected()) {
+
+                        queries.add("tag.name = '" + tagsCheckBox.getText() + "' and ");
+
+                    }
+
+                });
+
+
+
+
+                //TAGS END
+
+
+
+
+                if (queries.size() != 0) {
+                    database.filterAll(queries).forEach(cv -> {
+                        if (cv instanceof AcademicCv academicCv) {
+                            academicRoot.getChildren().add(new TreeItem<>(academicCv));
+                        } else {
+                            root.getChildren().add(new TreeItem<>(cv));
+                        }
+                        textField.clear();
+
+                    });
+                }
+
+
+
+
+
 
             } catch (NumberFormatException | SQLException e) {
                 e.printStackTrace();

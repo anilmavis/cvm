@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #e6eaf7;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ieu.tr.cvm.controllers.AppController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #e6eaf7;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ieu.tr.cvm.controllers.AppController">
   <children>
     <HBox prefHeight="30.0" prefWidth="600.0" style="-fx-background-color: #cdd5ee;" stylesheets="@style.css">
       <children>
@@ -87,7 +87,7 @@
         </VBox>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" stylesheets="@style.css" HBox.hgrow="ALWAYS">
           <children>
-                  <Button mnemonicParsing="false" prefWidth="70.0" text="Export" fx:id="exportButton" />
+                  <Button fx:id="exportButton" mnemonicParsing="false" prefWidth="70.0" text="Export" />
             <Button fx:id="removeButton" maxWidth="70.0" mnemonicParsing="false" text="Delete " VBox.vgrow="ALWAYS" />
           </children>
           <padding>
@@ -138,39 +138,24 @@
                                 <VBox fx:id="skillsVBox" />
                               </content>
                             </TitledPane>
-                            <TitledPane animated="false" text="Degree">
-                              <content>
-                                <VBox />
-                              </content>
-                            </TitledPane>
                                           <TitledPane fx:id="locationTitledPane" animated="false" layoutX="10.0" layoutY="114.0" text="Location">
                                              <content>
                                                 <VBox fx:id="locationVBox" spacing="3.0" />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" layoutX="10.0" layoutY="369.0" text="Publications">
+                                          <TitledPane fx:id="publicationsTitledPane" animated="false" layoutX="10.0" layoutY="369.0" text="Publications">
                                              <content>
-                                                <VBox />
+                                                <VBox fx:id="publicationsVBox" spacing="3.0"  />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" layoutX="10.0" layoutY="369.0" text="Title">
+                                          <TitledPane fx:id="tagsTitledPane" animated="false" layoutX="10.0" layoutY="10.0" text="Tags">
                                              <content>
-                                                <VBox />
+                                                <VBox fx:id="tagsVBox" spacing="3.0" />
                                              </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Tags">
+                                          <TitledPane fx:id="schoolTitledPane" animated="false" layoutX="10.0" layoutY="10.0" text="School">
                                              <content>
-                                                <VBox />
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="School">
-                                             <content>
-                                                <VBox />
-                                             </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Major">
-                                             <content>
-                                                <VBox />
+                                                <VBox fx:id="schoolVBox" />
                                              </content>
                                           </TitledPane>
                           </panes>

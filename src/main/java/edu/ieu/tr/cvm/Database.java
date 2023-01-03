@@ -179,13 +179,26 @@ public final class Database {
         return toObject(String.format("select * from cv where %s <= %f and %s >= %f", fieldName, highest, fieldName, lowest));
     }
 
-    public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
+   /* public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
         StringBuilder query = new StringBuilder();
         for (String s :queries) {
             query.append(s);
         }
         return toObject("select * from cv where "+ query + " 1+1");
+    }*/
+
+    public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
+        StringBuilder query = new StringBuilder();
+
+        for (String s :queries) {
+            query.append(s);
+        }
+
+
+        return toObject("select * from cv where "+ query + " 1=1");
     }
+
+
 
     public List<Cv> filterAllForCheckbox(String tableName, ArrayList<String> queries) throws SQLException {
         StringBuilder query = new StringBuilder();
@@ -384,6 +397,48 @@ public final class Database {
 
 
     }
+
+    public ArrayList<String> getSchool() throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement("select name from education");
+        final  ResultSet set =statement.executeQuery();
+        ArrayList<String> locations= new ArrayList<>();
+        while (set.next()){
+            locations.add(set.getString(1));
+        }
+        statement.close();
+        return locations;
+
+
+    }
+
+    public ArrayList<String> getPublications() throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement("select name from publications");
+        final  ResultSet set =statement.executeQuery();
+        ArrayList<String> locations= new ArrayList<>();
+        while (set.next()){
+            locations.add(set.getString(1));
+        }
+        statement.close();
+        return locations;
+
+
+    }
+
+    public ArrayList<String> getTags() throws SQLException {
+        final PreparedStatement statement = connection.prepareStatement("select name from tag");
+        final  ResultSet set =statement.executeQuery();
+        ArrayList<String> locations= new ArrayList<>();
+        while (set.next()){
+            locations.add(set.getString(1));
+        }
+        statement.close();
+        return locations;
+
+
+    }
+
+
+
 
     public void delete(final Cv cv) throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("delete from cv where id = ?");
