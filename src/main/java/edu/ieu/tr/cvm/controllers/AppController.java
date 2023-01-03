@@ -99,7 +99,6 @@ public final class AppController {
     @FXML
     private TextField highestBirthTextField;
 
-
     @FXML
     private Button exportButton;
 
@@ -135,18 +134,20 @@ public final class AppController {
         database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
         treeView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
-                
+
                 Dialog<Cv> d = new Dialog<>();
                 DialogPane pane = new DialogPane();
                 pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
                 d.setDialogPane(pane);
                 VBox box = new VBox();
-                if (treeView.getSelectionModel().getSelectedItem() == null) {return;}
+                if (treeView.getSelectionModel().getSelectedItem() == null) {
+                    return;
+                }
                 Cv cv = treeView.getSelectionModel().getSelectedItem().getValue();
                 if (root.getValue().equals(cv) || treeView.getSelectionModel().getSelectedItem().getValue() == null) {
                     return;
                 }
-                if (academicRoot.getValue().equals( cv)) {
+                if (academicRoot.getValue().equals(cv)) {
                     return;
                 }
                 TextField fullName = new TextField(cv.getFullName());
@@ -287,11 +288,11 @@ public final class AppController {
                 if (optional.isPresent()) {
 
                     Cv cvv = optional.get();
-                    
+
                     if (cvv instanceof AcademicCv academicCv) {
-                        
+
                     } else {
-                        
+
                     }
                 }
 
@@ -479,32 +480,70 @@ public final class AppController {
         filterButton.setOnAction(value -> {
             ArrayList<String> queries = new ArrayList<>();
             try {
-                if (!nameFilter.getText().isEmpty()){
+                if (!nameFilter.getText().isEmpty()) {
 
-
-                    queries.add("fullName like '%"+nameFilter.getText()+"%' and ");
+                    queries.add("fullName like '%" + nameFilter.getText() + "%' and ");
 
                 }
-                if (!highestBirthTextField.getText().isEmpty() && !lowestBirthTextField.getText().isEmpty()){
-                    queries.add("birthYear <= "+highestBirthTextField.getText()+" and birthYear >= "+ lowestBirthTextField.getText()+" and ");
+                if (!highestBirthTextField.getText().isEmpty() && !lowestBirthTextField.getText().isEmpty()) {
+                    queries.add("birthYear <= " + highestBirthTextField.getText() + " and birthYear >= "
+                            + lowestBirthTextField.getText() + " and ");
                 }
 
-                if (!highestGpaTextField.getText().isEmpty() && !lowestGpaTextField.getText().isEmpty()){
-                    queries.add("gpa <= "+highestGpaTextField.getText()+" and gpa >= "+ lowestGpaTextField.getText()+" ");
+                if (!highestGpaTextField.getText().isEmpty() && !lowestGpaTextField.getText().isEmpty()) {
+                    queries.add("gpa <= " + highestGpaTextField.getText() + " and gpa >= "
+                            + lowestGpaTextField.getText() + " ");
                 }
-root.getChildren().clear();
-academicRoot.getChildren().clear();
-database.filterAll(queries).forEach(cv -> {
-        if (cv instanceof AcademicCv academicCv) {
-            academicRoot.getChildren().add(new TreeItem<>(academicCv));
-        } else {
-            root.getChildren().add(new TreeItem<>(cv));
-        }
-        
-    });
+                
+                // if nothing is selected on filter accordion, the tree view is cleared. solve this problem later
+                root.getChildren().clear();
+                academicRoot.getChildren().clear();
+                
+                if (queries.size() != 0) {
+                database.filterAll(queries).forEach(cv -> {
+                    if (cv instanceof AcademicCv academicCv) {
+                        academicRoot.getChildren().add(new TreeItem<>(academicCv));
+                    } else {
+                        root.getChildren().add(new TreeItem<>(cv));
+                    }
+                    textField.clear();
+
+                });
+                }
 
 
 
+                // SKILLS BEGIN
+
+                ArrayList<String> skillsQueries = new ArrayList<>();
+                
+                skillsVBox.getChildren().forEach(skill -> {
+                    CheckBox checkBox = (CheckBox) skill;
+                    int counter = 0;
+                    if (checkBox.isSelected()) {
+                        counter++;
+                        skillsQueries.add("name = '" + checkBox.getText() + "'");
+                        skillsQueries.add(" and ");
+                    }
+                    if (counter == 0) {
+                        skillsQueries.clear();
+                    }
+                });
+                if (skillsQueries.size() > 0) {
+skillsQueries.remove(skillsQueries.get(skillsQueries.size() - 1));
+                }
+                if (skillsQueries.size() != 0) {
+                database.filterAllForCheckbox("skill", skillsQueries).forEach(cv -> {
+                    if (cv instanceof AcademicCv academicCv) {
+                        academicRoot.getChildren().add(new TreeItem<>(academicCv));
+                    } else {
+                        root.getChildren().add(new TreeItem<>(cv));
+                    }
+                    textField.clear();
+                });
+                }
+
+                // SKILLS END
 
             } catch (NumberFormatException | SQLException e) {
                 e.printStackTrace();
@@ -512,24 +551,23 @@ database.filterAll(queries).forEach(cv -> {
                 alert.setContentText(e.getMessage());
                 alert.show();
             }
-
-
         });
 
-
-    /*    filterButton.setOnAction(value -> {
-            root.getChildren().clear();
-            try {
-                database.filter("gpa", Double.parseDouble(lowestGpaTextField.getText()),
-                        Double.parseDouble(highestGpaTextField.getText()))
-                        .forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
-            } catch (NumberFormatException | SQLException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setContentText(e.getMessage());
-                alert.show();
-            }
-        });*/
+        /*
+         * filterButton.setOnAction(value -> {
+         * root.getChildren().clear();
+         * try {
+         * database.filter("gpa", Double.parseDouble(lowestGpaTextField.getText()),
+         * Double.parseDouble(highestGpaTextField.getText()))
+         * .forEach(cv -> root.getChildren().add(new TreeItem<>(cv)));
+         * } catch (NumberFormatException | SQLException e) {
+         * e.printStackTrace();
+         * Alert alert = new Alert(AlertType.ERROR);
+         * alert.setContentText(e.getMessage());
+         * alert.show();
+         * }
+         * });
+         */
 
         menuItemHelp.setOnAction((value) -> {
             Alert alert = new Alert(AlertType.INFORMATION);
@@ -562,11 +600,11 @@ database.filterAll(queries).forEach(cv -> {
             Platform.exit();
         });
         exportButton.setOnAction(value -> {
-                try {
-					Exporter.export(treeView.getSelectionModel().getSelectedItem().getValue());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-            });
+            try {
+                Exporter.export(treeView.getSelectionModel().getSelectedItem().getValue());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

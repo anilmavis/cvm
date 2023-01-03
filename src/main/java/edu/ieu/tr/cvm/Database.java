@@ -128,7 +128,7 @@ public final class Database {
 
         final PreparedStatement statement3 = connection.prepareStatement("select * from publications");
         final ResultSet set3 = statement3.executeQuery();
-
+        
         while (set3.next()) {
             if (cvs.get(set3.getInt(2)) != null) {
             if (cvs.get(set3.getInt(2)) instanceof AcademicCv academicCv) {
@@ -184,6 +184,15 @@ public final class Database {
             query.append(s);
         }
         return toObject("select * from cv where "+ query);
+    }
+
+    public List<Cv> filterAllForCheckbox(String tableName, ArrayList<String> queries) throws SQLException {
+        StringBuilder query = new StringBuilder();
+        for (String s :queries) {
+            query.append(s);
+        }
+        
+        return toObject("select * from cv where id in (select cv_id from " + tableName + " where " + query + ")");
     }
 
     public String educationToString(final Cv cv) {
