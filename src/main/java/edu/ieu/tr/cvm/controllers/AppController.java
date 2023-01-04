@@ -172,7 +172,7 @@ public final class AppController {
 
                 Dialog<Cv> d = new Dialog<>();
                 DialogPane pane = new DialogPane();
-                pane.setMaxHeight(600);
+                pane.setMaxHeight(700);
                 pane.setMaxWidth(400);
                 pane.getStylesheets().add("style.css");
                 pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -258,24 +258,6 @@ public final class AppController {
                         try {
 
 
-                            if(!homeAddress.getText().isEmpty()) {
-                                locationVBox.getChildren().clear();
-                                database.getLocations().forEach(v->{if (!v.isEmpty()){locationVBox.getChildren().add(new CheckBox(v));}});
-                                locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));}
-                            locationTitledPane.setContent(locationVBox);
-                            skillsVBox.getChildren().clear();
-                            database.getSkills().forEach(v -> {if (!v.isEmpty()){skillsVBox.getChildren().add(new CheckBox(v));}});
-                            
-                            skillsTitledPane.setContent(skillsVBox);
-                            schoolVBox.getChildren().clear();
-                            database.getSchool().forEach(v -> {if (!v.isEmpty()){schoolVBox.getChildren().add(new CheckBox(v));};});
-                            schoolTitledPane.setContent(schoolVBox);
-                            tagsVBox.getChildren().clear();
-                            database.getTags().forEach(v -> {if (!v.isEmpty()){tagsVBox.getChildren().add(new CheckBox(v));};});
-                            tagsTitledPane.setContent(tagsVBox);
-                            publicationsVBox.getChildren().clear();
-                            database.getPublications().forEach(v -> {if (!v.isEmpty()){publicationsVBox.getChildren().add(new CheckBox(v));};});
-                            publicationsTitledPane.setContent(publicationsVBox);
 
 
                             Map<String, Integer> newPublications = new HashMap<>();
@@ -343,7 +325,27 @@ public final class AppController {
                                 System.out.println(cvv);
                             }
                            
-                           database.update(cvv);                            
+                           database.update(cvv);
+
+
+                            locationVBox.getChildren().clear();
+                            locationTitledPane.setContent(locationVBox);
+                            database.getLocations().forEach(v -> {if (!v.isEmpty()){locationVBox.getChildren().add(new CheckBox(v));}});
+
+                            skillsVBox.getChildren().clear();
+                            database.getSkills().forEach(v -> {if (!v.isEmpty()){skillsVBox.getChildren().add(new CheckBox(v));}});
+
+                            skillsTitledPane.setContent(skillsVBox);
+                            schoolVBox.getChildren().clear();
+                            database.getSchool().forEach(v -> {if (!v.isEmpty()){schoolVBox.getChildren().add(new CheckBox(v));};});
+                            schoolTitledPane.setContent(schoolVBox);
+                            tagsVBox.getChildren().clear();
+                            database.getTags().forEach(v -> {if (!v.isEmpty()){tagsVBox.getChildren().add(new CheckBox(v));};});
+                            tagsTitledPane.setContent(tagsVBox);
+                            publicationsVBox.getChildren().clear();
+                            database.getPublications().forEach(v -> {if (!v.isEmpty()){publicationsVBox.getChildren().add(new CheckBox(v));};});
+                            publicationsTitledPane.setContent(publicationsVBox);
+
 
                             treeView.getSelectionModel().getSelectedItem().setValue(cvv);
                             return cvv; // return new cv
@@ -395,7 +397,6 @@ public final class AppController {
             phone.setPromptText("phone");
             TextField website = new TextField();
             website.setPromptText("website");
-            Label label = new Label("Education:");
             TextArea education = new TextArea();
             education.setPromptText("education\rname 1, register year 1\rname 2, register year 2\r...");
             TextArea skills = new TextArea();
@@ -427,7 +428,7 @@ public final class AppController {
                 }
             });
             statusHbox.getChildren().add(status);
-            pane.setMaxHeight(400);
+            pane.setMaxHeight(700);
             pane.setMaxWidth(400);
             VBox box = new VBox();
             box.setSpacing(3);
@@ -441,7 +442,6 @@ public final class AppController {
                     jobAddress,
                     phone,
                     website,
-                    label,
                     education,
                     skills, // filter
                     publications,
@@ -661,7 +661,7 @@ public final class AppController {
 
                     if (publicationCheckBox.isSelected()) {
 
-                        queries.add(" cv.id in (select publications.cv_id from publications where publication.name = '" + publicationCheckBox.getText() + "') and");
+                        queries.add(" cv.id in (select publications.cv_id from publications where publications.name = '" + publicationCheckBox.getText() + "') and");
 
 
 

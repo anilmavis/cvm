@@ -380,7 +380,7 @@ public final class Database {
     }
 
     public ArrayList<String> getLocations() throws SQLException {
-        final PreparedStatement statement = connection.prepareStatement("select homeAddress from cv");
+        final PreparedStatement statement = connection.prepareStatement("select distinct homeAddress from cv");
         final ResultSet set = statement.executeQuery();
         final ArrayList<String> locations = new ArrayList<>();
         while (set.next()) {
