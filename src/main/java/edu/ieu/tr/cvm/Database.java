@@ -252,7 +252,7 @@ public final class Database {
     public String educationToStringUpdate(final Cv cv) {
         String s = "delete from education where cv_id = " + cv.getId() + ";";
         for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
-            s += "insert into education (cv_id, name, year) values (+'" + entry.getKey() + "', " + entry.getValue() + ");";
+            s += "insert into education (cv_id, name, year) values ("+ cv.getId() + ",'"+ entry.getKey() + "', " + entry.getValue() + ");";
 
         }
         return s;
