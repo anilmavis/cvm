@@ -313,10 +313,17 @@ public final class Database {
         } else {
 
         }
+        String publications2 = "";
+        if (cv instanceof final AcademicCv academicCv) {
+            publications2 = publicationsToString(academicCv);
+        } else {
+
+        }
         System.out
                 .println(skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
         statement2.executeUpdate(
-                skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
+                skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv) +
+                skillToString(cv) + educationToString(cv) + publications2 + tagToString(cv));
         statement2.close();
     }
 
@@ -377,7 +384,7 @@ public final class Database {
     }
 
     public ArrayList<String> getSkills() throws SQLException {
-        final PreparedStatement statement = connection.prepareStatement("select name from skill");
+        final PreparedStatement statement = connection.prepareStatement("select distinct name from skill");
         final ResultSet set = statement.executeQuery();
         final ArrayList<String> locations = new ArrayList<>();
         while (set.next()) {
@@ -389,7 +396,7 @@ public final class Database {
     }
 
     public ArrayList<String> getSchool() throws SQLException {
-        final PreparedStatement statement = connection.prepareStatement("select name from education");
+        final PreparedStatement statement = connection.prepareStatement("select distinct name from education");
         final ResultSet set = statement.executeQuery();
         final ArrayList<String> locations = new ArrayList<>();
         while (set.next()) {
@@ -401,7 +408,7 @@ public final class Database {
     }
 
     public ArrayList<String> getPublications() throws SQLException {
-        final PreparedStatement statement = connection.prepareStatement("select name from publications");
+        final PreparedStatement statement = connection.prepareStatement("select distinct name from publications");
         final ResultSet set = statement.executeQuery();
         final ArrayList<String> locations = new ArrayList<>();
         while (set.next()) {
@@ -413,7 +420,7 @@ public final class Database {
     }
 
     public ArrayList<String> getTags() throws SQLException {
-        final PreparedStatement statement = connection.prepareStatement("select name from tag");
+        final PreparedStatement statement = connection.prepareStatement("select distinct name from tag");
         final ResultSet set = statement.executeQuery();
         final ArrayList<String> locations = new ArrayList<>();
         while (set.next()) {
