@@ -91,13 +91,25 @@
 -fx-border-color:  #78829f;
     -fx-border-radius: 5px;
 }
+
+  .text-area .content{
+    -fx-background-color:    #e6eaf7;
+
+
+  }
+
 .dialog-pane {
-    -fx-background-color:    #e6eaf7;
+    -fx-background-color:    #cdd5ee;
+    -fx-font-size: 12;
 }
 
-.dialog-pane > .text-field {
-    -fx-background-color:    #e6eaf7;
+.choice-box {
+      -fx-background-color: #bcc7e9;
+      -fx-border-color:  #78829f;
+      -fx-border-radius: 5px;
 }
-
+.choice-box .context-menu { -fx-background-color: #e6eaf7; }
+.choice-box .menu-item:focused { -fx-background-color: #bcc7e9; }
+.choice-box .menu-item:focused > .label { -fx-text-fill: black; }
 
 

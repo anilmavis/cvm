@@ -170,9 +170,13 @@ public final class AppController {
 
                 Dialog<Cv> d = new Dialog<>();
                 DialogPane pane = new DialogPane();
+                pane.setMaxHeight(600);
+                pane.setMaxWidth(400);
+                pane.getStylesheets().add("style.css");
                 pane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
                 d.setDialogPane(pane);
                 VBox box = new VBox();
+                box.setSpacing(3);
                 if (treeView.getSelectionModel().getSelectedItem() == null) {
                     return;
                 }
@@ -352,6 +356,7 @@ public final class AppController {
         addButton.setOnAction((value) -> {
 
             DialogPane pane = new DialogPane();
+            pane.getStylesheets().add("style.css");
 
             TextField fullName = new TextField();
             fullName.setPromptText("full name");
@@ -403,11 +408,10 @@ public final class AppController {
                 }
             });
             statusHbox.getChildren().add(status);
-
-            pane.setStyle("-fx-background-color: #cdd5ee;");
             pane.setMaxHeight(400);
             pane.setMaxWidth(400);
             VBox box = new VBox();
+            box.setSpacing(3);
             box.getChildren().addAll(statusHbox,
                     fullName,
                     birthYear, // filter
@@ -727,6 +731,7 @@ public final class AppController {
             area.setEditable(false);
 
             alert.getDialogPane().setExpandableContent(area);
+            alert.getDialogPane().setStyle("-fx-background-color:    #e6eaf7;");
             alert.showAndWait();
         });
 
