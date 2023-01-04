@@ -273,6 +273,9 @@ public final class AppController {
                             Map<String, Integer> newPublications = new HashMap<>();
                             Arrays.asList(publications.getText().split("\n")).forEach(line -> {
                                 String[] values = line.split(",");
+                                for(int i = 0; i < values.length; i++){
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newPublications.put(values[0], Integer.parseInt(values[1]));
                                 }
@@ -281,6 +284,9 @@ public final class AppController {
                             Map<String, Integer> newEducation = new HashMap<>();
                             Arrays.asList(education.getText().split("\n")).forEach(line -> {
                                 String[] values = line.split(",");
+                                for(int i = 0; i < values.length; i++){
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newEducation.put(values[0], Integer.parseInt(values[1]));
                                 }
@@ -289,6 +295,9 @@ public final class AppController {
                             Map<String, Integer> newSkills = new HashMap<>();
                             Arrays.asList(skills.getText().split("\n")).forEach(line -> {
                                 String[] values = line.split(",");
+                                for(int i = 0; i < values.length; i++){
+                                    values[i] = values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newSkills.put(values[0], Integer.parseInt(values[1]));
                                 }
@@ -442,6 +451,9 @@ public final class AppController {
                         Map<String, Integer> newEducation = new HashMap<>();
                         Arrays.asList(education.getText().split("\n")).forEach(line -> {
                             String[] values = line.split(",");
+                            for(int i =0;i<values.length;i++){
+                                values[i]=values[i].trim();
+                            }
                             if (values.length > 1) {
                                 newEducation.put(values[0], Integer.parseInt(values[1]));
                             }
@@ -450,6 +462,9 @@ public final class AppController {
                         Map<String, Integer> newSkills = new HashMap<>();
                         Arrays.asList(skills.getText().split("\n")).forEach(line -> {
                             String[] values = line.split(",");
+                            for(int i =0;i<values.length;i++){
+                                values[i]=values[i].trim();
+                            }
                             if (values.length > 1) {
                                 newSkills.put(values[0], Integer.parseInt(values[1]));
                             }
@@ -459,6 +474,9 @@ public final class AppController {
                             Map<String, Integer> newPublications = new HashMap<>();
                             Arrays.asList(publications.getText().split("\n")).forEach(line -> {
                                 String[] values = line.split(",");
+                                for(int i =0;i<values.length;i++){
+                                    values[i]=values[i].trim();
+                                }
                                 if (values.length > 1) {
                                     newPublications.put(values[0], Integer.parseInt(values[1]));
                                 }
