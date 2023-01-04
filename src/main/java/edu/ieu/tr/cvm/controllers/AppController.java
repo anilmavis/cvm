@@ -252,13 +252,15 @@ public final class AppController {
 
                 d.setTitle("edit");
 
+                String oldHomeAddress = homeAddress.getText();
                 d.setResultConverter(type -> {
                     if (type == ButtonType.OK) {
                         try {
 
-                            
 
                             if(!homeAddress.getText().isEmpty()) {
+                                locationVBox.getChildren().clear();
+                                database.getLocations().forEach(v->{if (!v.isEmpty()){if(v.equals(oldHomeAddress)){;}locationVBox.getChildren().add(new CheckBox(v));}});
                                 locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));}
                             locationTitledPane.setContent(locationVBox);
                             skillsVBox.getChildren().clear();
