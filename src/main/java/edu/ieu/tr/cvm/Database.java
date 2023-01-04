@@ -244,16 +244,15 @@ public final class Database {
         for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
             s += "insert into publications (cv_id, name, year) values (" + cv.getId() + ",'" + entry.getKey() + "',"
                     + entry.getValue() + ");";
+        
 
         return s;
     }
 
     public String educationToStringUpdate(final Cv cv) {
-        String s = "";
-
+        String s = "delete from education where cv_id = " + cv.getId() + ";";
         for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
-            s += "update education set name = '" + entry.getKey() + "', year = " + entry.getValue() + " where cv_id = "
-                    + cv.getId() + ";";
+            s += "insert into education (cv_id, name, year) values (+'" + entry.getKey() + "', " + entry.getValue() + ");";
 
         }
         return s;
@@ -261,27 +260,28 @@ public final class Database {
 
     public String tagToStringUpdate(final Cv cv) {
         final StringBuilder sb = new StringBuilder();
+        sb.append("delete from tag where cv_id = " + cv.getId() + ";");
         System.out.println(cv.getTags());
         cv.getTags().forEach(e -> {
-            sb.append("update tag set name = '" + e + "' where cv_id = " + cv.getId() + ";");
+            
+            sb.append("insert into tag (cv_id, name) values ("+ cv.getId()+ ",'" + e +"');");
         });
         return sb.toString();
     }
 
     public String skillToStringUpdate(final Cv cv) {
-        String s = "";
+        String s = "delete from skill where cv_id = " + cv.getId() + ";";
         for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
-            s += "update skill set name = '" + entry.getKey() + "', level = " + entry.getValue() + " where cv_id = "
-                    + cv.getId() + ";";
+            s += "insert into skill (cv_id, name, level) values ("+ cv.getId()+ ",'" + entry.getKey() + "', " + entry.getValue() + ");";
         return s;
     }
 
     public String publicationsToStringUpdate(final AcademicCv cv) {
-        String s = "";
+        String s = "delete from publications where cv_id = " + cv.getId() + ";";
         for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
 
-            s += "update publications set name = '" + entry.getKey() + "', year = " + entry.getValue()
-                    + " where cv_id = " + cv.getId() + ";";
+            
+        s += "insert into publications (cv_id, name, year) values ("+ cv.getId()+ ",'" + entry.getKey() + "', " + entry.getValue() + ");";
 
         return s;
     }
