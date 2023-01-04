@@ -24,7 +24,7 @@ public class DatabaseTest {
     public void testInsert() throws SQLException, ClassNotFoundException {
         Database.getInstance().open();
         int oldlength=Database.getInstance().getAll().size();
-        Database.getInstance().insert(new Cv("hümay",2001,3,"humayzehraozer@gmail.com","student","home","05533000958","github.com",new HashMap<>(),new HashMap<>(), new ArrayList<>()));
+        Database.getInstance().insert(new Cv("Hümay Zehra Özer",2001,3,"humayzehraozer@gmail.com","Student of Computer Engineering and Math","İzmir","05533000958","github.com",new HashMap<>(),new HashMap<>(), new ArrayList<>()));
         int newlength=Database.getInstance().getAll().size();
         assertEquals(newlength, oldlength + 1);
         Database.getInstance().close();
