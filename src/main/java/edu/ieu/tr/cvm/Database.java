@@ -48,7 +48,7 @@ public final class Database {
                 "name text ," +
                 "level integer," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade);" +
-            "create unique index if not exists  skill_unique_name on skill (name, cv_id);" +
+            // "create unique index if not exists  skill_unique_name on skill (name, cv_id);" +
 
                 "create table if not exists education " +
                 "(id integer primary key autoincrement," +
@@ -57,7 +57,7 @@ public final class Database {
                 "year integer," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade); " +
 
-            "create unique index if not exists  education_unique_name on education (name, cv_id);" +
+            //"create unique index if not exists  education_unique_name on education (name, cv_id);" +
 
                 "create table if not exists publications " +
                 "(id integer primary key autoincrement," +
@@ -66,7 +66,7 @@ public final class Database {
                 "year integer," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade);" +
 
-            "create unique index if not exists publications_unique_name on publications (name, cv_id);" +
+            // "create unique index if not exists publications_unique_name on publications (name, cv_id);" +
 
             
 
@@ -75,7 +75,8 @@ public final class Database {
                 "cv_id integer," +
                 "name text," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade);"
-            +"create unique index if not exists  tag_unique_name on tag (name, cv_id);" ;
+            // +"create unique index if not exists  tag_unique_name on tag (name, cv_id);"
+            ;
         statement.executeUpdate(string);
         statement.close();
     }
