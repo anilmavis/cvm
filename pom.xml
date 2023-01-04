@@ -121,7 +121,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
-          <mainClass>edu.ieu.tr.cvm.App</mainClass>
+          <mainClass>edu.ieu.tr.cvm.Main</mainClass>
         </configuration>
       </plugin>
       
@@ -139,7 +139,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>edu.ieu.tr.cvm.App</mainClass>
+              <mainClass>edu.ieu.tr.cvm.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
