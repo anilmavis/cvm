@@ -53,7 +53,7 @@ public final class Database {
                 "(id integer primary key autoincrement," +
                 "cv_id integer," +
                 "name text," +
-            "year integer," +
+                "year integer," +
                 "foreign key(cv_id) references cv(id) on update cascade on delete cascade); " +
 
                 "create table if not exists publications " +
@@ -72,71 +72,66 @@ public final class Database {
         statement.close();
     }
 
-    private List<Cv> toObject(String query) throws SQLException {
+    private List<Cv> toObject(final String query) throws SQLException {
         final Map<Integer, Cv> cvs = new HashMap<>();
         System.out.println(query);
         final PreparedStatement statement1 = connection.prepareStatement(query);
         final ResultSet set1 = statement1.executeQuery();
         while (set1.next()) {
+            System.out.println(set1.getString(8));
             if (set1.getString(8) != null) {
 
-
-            cvs.put(set1.getInt(1), new AcademicCv(set1.getInt(1),
-                    set1.getString(2),
-                    set1.getInt(3),
-                    set1.getFloat(4),
-                    set1.getString(5),
-                    set1.getString(6),
-                    set1.getString(7),
-                    set1.getString(8),
-                    set1.getString(9),
-                    set1.getString(10),
-                    new HashMap<>(),
-                    new HashMap<>(),
-                    new HashMap<>(),
-                    new ArrayList<>()));
+                cvs.put(set1.getInt(1), new AcademicCv(set1.getInt(1),
+                        set1.getString(2),
+                        set1.getInt(3),
+                        set1.getFloat(4),
+                        set1.getString(5),
+                        set1.getString(6),
+                        set1.getString(7),
+                        set1.getString(8),
+                        set1.getString(9),
+                        set1.getString(10),
+                        new HashMap<>(),
+                        new HashMap<>(),
+                        new HashMap<>(),
+                        new ArrayList<>()));
             } else {
                 cvs.put(set1.getInt(1), new Cv(set1.getInt(1),
-                    set1.getString(2),
-                    set1.getInt(3),
-                    set1.getFloat(4),
-                    set1.getString(5),
-                    set1.getString(6),
-                    set1.getString(7),
-                    set1.getString(9),
-                    set1.getString(10),
-                    new HashMap<>(),
-                    new HashMap<>(),
-                    new ArrayList<>()));
+                        set1.getString(2),
+                        set1.getInt(3),
+                        set1.getFloat(4),
+                        set1.getString(5),
+                        set1.getString(6),
+                        set1.getString(7),
+                        set1.getString(9),
+                        set1.getString(10),
+                        new HashMap<>(),
+                        new HashMap<>(),
+                        new ArrayList<>()));
             }
         }
         statement1.close();
 
         final PreparedStatement statement2 = connection.prepareStatement("select * from skill");
         final ResultSet set2 = statement2.executeQuery();
-
         while (set2.next()) {
-            
-            
+
             if (cvs.get(set2.getInt(2)) != null) {
-                final Map<String, Integer> skills = new HashMap<>();
-                cvs.get(set2.getInt(2)).setSkills(skills);
-                skills.put(set2.getString(3), set2.getInt(4));
+                cvs.get(set2.getInt(2)).getSkills().put(set2.getString(3), set2.getInt(4));
             }
-            
+
         }
         statement2.close();
 
         final PreparedStatement statement3 = connection.prepareStatement("select * from publications");
         final ResultSet set3 = statement3.executeQuery();
-        
+
         while (set3.next()) {
             if (cvs.get(set3.getInt(2)) != null) {
-            if (cvs.get(set3.getInt(2)) instanceof AcademicCv academicCv) {
-            final Map<String, Integer> publications = new HashMap<>();
-            publications.put(set3.getString(3), set3.getInt(4));
-            academicCv.setPublications(publications);
-            }}
+                if (cvs.get(set3.getInt(2)) instanceof final AcademicCv academicCv) {
+                    academicCv.getPublications().put(set3.getString(3), set3.getInt(4));
+                }
+            }
         }
         statement3.close();
 
@@ -145,9 +140,8 @@ public final class Database {
 
         while (set5.next()) {
             if (cvs.get(set5.getInt(2)) != null) {
-            final Map<String, Integer> education = new HashMap<>();
-            education.put(set5.getString(3), set5.getInt(4));
-            cvs.get(set5.getInt(2)).setEducation(education);
+                cvs.get(set5.getInt(2)).getEducation().put(set5.getString(3), set5.getInt(4));
+
             }
         }
         statement5.close();
@@ -157,9 +151,8 @@ public final class Database {
 
         while (set4.next()) {
             if (cvs.get(set4.getInt(2)) != null) {
-            final List<String> tags = new ArrayList<>();
-            tags.add(set4.getString(3));
-            cvs.get(set4.getInt(2)).setTags(tags);
+
+                cvs.get(set4.getInt(2)).getTags().add(set4.getString(3));
             }
         }
         statement4.close();
@@ -171,41 +164,41 @@ public final class Database {
         return toObject("select * from cv");
     }
 
-    public List<Cv> filter(String fieldName, String fieldValue) throws SQLException {
+    public List<Cv> filter(final String fieldName, final String fieldValue) throws SQLException {
         return toObject(String.format("select * from cv where %s like '%%%s%%'", fieldName, fieldValue));
     }
 
-    public List<Cv> filter(String fieldName, double lowest, double highest) throws SQLException {
-        return toObject(String.format("select * from cv where %s <= %f and %s >= %f", fieldName, highest, fieldName, lowest));
+    public List<Cv> filter(final String fieldName, final double lowest, final double highest) throws SQLException {
+        return toObject(
+                String.format("select * from cv where %s <= %f and %s >= %f", fieldName, highest, fieldName, lowest));
     }
 
-   /* public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        for (String s :queries) {
+    /*
+     * public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
+     * StringBuilder query = new StringBuilder();
+     * for (String s :queries) {
+     * query.append(s);
+     * }
+     * return toObject("select * from cv where "+ query + " 1+1");
+     * }
+     */
+
+    public List<Cv> filterAll(final ArrayList<String> queries) throws SQLException {
+        final StringBuilder query = new StringBuilder();
+
+        for (final String s : queries) {
             query.append(s);
         }
-        return toObject("select * from cv where "+ query + " 1+1");
-    }*/
 
-    public List<Cv> filterAll(ArrayList<String> queries) throws SQLException {
-        StringBuilder query = new StringBuilder();
-
-        for (String s :queries) {
-            query.append(s);
-        }
-
-
-        return toObject("select * from cv where "+ query + " 1=1");
+        return toObject("select * from cv where " + query + " 1=1");
     }
 
-
-
-    public List<Cv> filterAllForCheckbox(String tableName, ArrayList<String> queries) throws SQLException {
-        StringBuilder query = new StringBuilder();
-        for (String s :queries) {
+    public List<Cv> filterAllForCheckbox(final String tableName, final ArrayList<String> queries) throws SQLException {
+        final StringBuilder query = new StringBuilder();
+        for (final String s : queries) {
             query.append(s);
         }
-        
+
         return toObject("select * from cv where id in (select cv_id from " + tableName + " where " + query + "1=1)");
     }
 
@@ -213,7 +206,8 @@ public final class Database {
         String s = "";
 
         for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
-            s += "insert into education (cv_id,name,year) values (" + cv.getId() + ",'" + entry.getKey() + "'," + entry.getValue()+");";
+            s += "insert into education (cv_id,name,year) values (" + cv.getId() + ",'" + entry.getKey() + "',"
+                    + entry.getValue() + ");";
 
         }
         return s;
@@ -231,32 +225,26 @@ public final class Database {
     public String skillToString(final Cv cv) {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
-            s += "insert into skill (cv_id,name, level) values (" + cv.getId() + ",'" + entry.getKey() +"'," + entry.getValue() + ");";
+            s += "insert into skill (cv_id,name, level) values (" + cv.getId() + ",'" + entry.getKey() + "',"
+                    + entry.getValue() + ");";
         return s;
     }
 
     public String publicationsToString(final AcademicCv cv) {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
-            s += "insert into publications (cv_id, name, year) values (" + cv.getId() + ",'" + entry.getKey() + "',"+ entry.getValue() + ");";
+            s += "insert into publications (cv_id, name, year) values (" + cv.getId() + ",'" + entry.getKey() + "',"
+                    + entry.getValue() + ");";
 
         return s;
     }
-
-
-
-
-
-
-
-
-
 
     public String educationToStringUpdate(final Cv cv) {
         String s = "";
 
         for (final Map.Entry<String, Integer> entry : cv.getEducation().entrySet()) {
-            s += "update education set name = '" + entry.getKey() + "', year = " + entry.getValue() + " where cv_id = " + cv.getId() + ";";
+            s += "update education set name = '" + entry.getKey() + "', year = " + entry.getValue() + " where cv_id = "
+                    + cv.getId() + ";";
 
         }
         return s;
@@ -266,7 +254,7 @@ public final class Database {
         final StringBuilder sb = new StringBuilder();
         System.out.println(cv.getTags());
         cv.getTags().forEach(e -> {
-            sb.append("update tag set name = '" + e +"' where cv_id = " + cv.getId() +";");
+            sb.append("update tag set name = '" + e + "' where cv_id = " + cv.getId() + ";");
         });
         return sb.toString();
     }
@@ -274,15 +262,17 @@ public final class Database {
     public String skillToStringUpdate(final Cv cv) {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getSkills().entrySet())
-        s += "update skill set name = '" + entry.getKey() + "', level = " + entry.getValue() + " where cv_id = " + cv.getId() + ";";
+            s += "update skill set name = '" + entry.getKey() + "', level = " + entry.getValue() + " where cv_id = "
+                    + cv.getId() + ";";
         return s;
     }
 
     public String publicationsToStringUpdate(final AcademicCv cv) {
         String s = "";
         for (final Map.Entry<String, Integer> entry : cv.getPublications().entrySet())
-            
-        s += "update publications set name = '" + entry.getKey() + "', year = " + entry.getValue() + " where cv_id = " + cv.getId() + ";";
+
+            s += "update publications set name = '" + entry.getKey() + "', year = " + entry.getValue()
+                    + " where cv_id = " + cv.getId() + ";";
 
         return s;
     }
@@ -304,26 +294,27 @@ public final class Database {
         statement1.setString(4, cv.getEmail());
         statement1.setString(5, cv.getDescription());
         statement1.setString(6, cv.getHomeAddress());
-        if (cv instanceof AcademicCv academicCv) {
-            
-        statement1.setString(7, academicCv.getJobAddress());
+        if (cv instanceof final AcademicCv academicCv) {
+
+            statement1.setString(7, academicCv.getJobAddress());
         } else {
-            
+
         }
         statement1.setString(8, cv.getPhone());
         statement1.setString(9, cv.getWebsite());
         statement1.setInt(10, cv.getId());
         statement1.executeUpdate();
-        
+
         statement1.close();
         final Statement statement2 = connection.createStatement();
         String publications = "";
-        if (cv instanceof AcademicCv academicCv) {
+        if (cv instanceof final AcademicCv academicCv) {
             publications = publicationsToStringUpdate(academicCv);
         } else {
-            
+
         }
-        System.out.println(skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
+        System.out
+                .println(skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
         statement2.executeUpdate(
                 skillToStringUpdate(cv) + educationToStringUpdate(cv) + publications + tagToStringUpdate(cv));
         statement2.close();
@@ -348,11 +339,11 @@ public final class Database {
         statement1.setString(4, cv.getEmail());
         statement1.setString(5, cv.getDescription());
         statement1.setString(6, cv.getHomeAddress());
-        if (cv instanceof AcademicCv academicCv) {
-            
-        statement1.setString(7, academicCv.getJobAddress());
+        if (cv instanceof final AcademicCv academicCv) {
+
+            statement1.setString(7, academicCv.getJobAddress());
         } else {
-            
+
         }
         statement1.setString(8, cv.getPhone());
         statement1.setString(9, cv.getWebsite());
@@ -361,10 +352,10 @@ public final class Database {
         statement1.close();
         final Statement statement2 = connection.createStatement();
         String publications = "";
-        if (cv instanceof AcademicCv academicCv) {
+        if (cv instanceof final AcademicCv academicCv) {
             publications = publicationsToString(academicCv);
         } else {
-            
+
         }
         System.out.println(skillToString(cv) + educationToString(cv) + publications + tagToString(cv));
         statement2.executeUpdate(
@@ -375,70 +366,63 @@ public final class Database {
 
     public ArrayList<String> getLocations() throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("select homeAddress from cv");
-        final  ResultSet set =statement.executeQuery();
-        ArrayList<String> locations= new ArrayList<>();
-        while (set.next()){
+        final ResultSet set = statement.executeQuery();
+        final ArrayList<String> locations = new ArrayList<>();
+        while (set.next()) {
             locations.add(set.getString(1));
         }
         statement.close();
         return locations;
-
 
     }
+
     public ArrayList<String> getSkills() throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("select name from skill");
-        final  ResultSet set =statement.executeQuery();
-        ArrayList<String> locations= new ArrayList<>();
-        while (set.next()){
+        final ResultSet set = statement.executeQuery();
+        final ArrayList<String> locations = new ArrayList<>();
+        while (set.next()) {
             locations.add(set.getString(1));
         }
         statement.close();
         return locations;
-
 
     }
 
     public ArrayList<String> getSchool() throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("select name from education");
-        final  ResultSet set =statement.executeQuery();
-        ArrayList<String> locations= new ArrayList<>();
-        while (set.next()){
+        final ResultSet set = statement.executeQuery();
+        final ArrayList<String> locations = new ArrayList<>();
+        while (set.next()) {
             locations.add(set.getString(1));
         }
         statement.close();
         return locations;
-
 
     }
 
     public ArrayList<String> getPublications() throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("select name from publications");
-        final  ResultSet set =statement.executeQuery();
-        ArrayList<String> locations= new ArrayList<>();
-        while (set.next()){
+        final ResultSet set = statement.executeQuery();
+        final ArrayList<String> locations = new ArrayList<>();
+        while (set.next()) {
             locations.add(set.getString(1));
         }
         statement.close();
         return locations;
-
 
     }
 
     public ArrayList<String> getTags() throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("select name from tag");
-        final  ResultSet set =statement.executeQuery();
-        ArrayList<String> locations= new ArrayList<>();
-        while (set.next()){
+        final ResultSet set = statement.executeQuery();
+        final ArrayList<String> locations = new ArrayList<>();
+        while (set.next()) {
             locations.add(set.getString(1));
         }
         statement.close();
         return locations;
 
-
     }
-
-
-
 
     public void delete(final Cv cv) throws SQLException {
         final PreparedStatement statement = connection.prepareStatement("delete from cv where id = ?");
