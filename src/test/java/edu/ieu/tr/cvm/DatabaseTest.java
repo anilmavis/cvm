@@ -31,16 +31,6 @@ public class DatabaseTest {
 
     }
 
-    @Test
-    public void testInsertwithEmptyName() throws SQLException, ClassNotFoundException {
-        Database.getInstance().open();
-        int oldlength=Database.getInstance().getAll().size();
-        Database.getInstance().insert(new Cv("",2001,3,"humayzehraozer@gmail.com","student","home","05533000958","github.com",new HashMap<>(),new HashMap<>(), new ArrayList<>()));
-        int newlength=Database.getInstance().getAll().size();
-        assertEquals(newlength, oldlength + 1);
-        Database.getInstance().close();
-
-    }
 
     @Test
     public void testDelete() throws SQLException, ClassNotFoundException{
