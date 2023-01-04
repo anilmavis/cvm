@@ -21,24 +21,24 @@
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
-        <version>LATEST</version>
+        <version>11</version>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-graphics </artifactId>
-        <version>LATEST</version>
+        <version>11</version>
         <classifier>win</classifier>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-graphics </artifactId>
-        <version>LATEST</version>
+        <version>11</version>
         <classifier>linux</classifier>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-graphics </artifactId>
-        <version>LATEST</version>
+        <version>11</version>
         <classifier>mac</classifier>
     </dependency>
     <dependency>
@@ -95,7 +95,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>edu.ieu.tr.cvm.App</mainClass>
+              <mainClass>edu.ieu.tr.cvm.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
