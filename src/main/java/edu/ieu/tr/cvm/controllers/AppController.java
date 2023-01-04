@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.sqlite.SQLiteException;
+
 import edu.ieu.tr.cvm.AcademicCv;
 import edu.ieu.tr.cvm.Cv;
 import edu.ieu.tr.cvm.Database;
@@ -253,21 +255,25 @@ public final class AppController {
                 d.setResultConverter(type -> {
                     if (type == ButtonType.OK) {
                         try {
-                            locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));
+
+                            
+
+                            if(!homeAddress.getText().isEmpty()) {
+                                locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));}
                             locationTitledPane.setContent(locationVBox);
-
-                            skillsVBox.getChildren().add(new CheckBox(skills.getText()));
+                            skillsVBox.getChildren().clear();
+                            database.getSkills().forEach(v -> {if (!v.isEmpty()){skillsVBox.getChildren().add(new CheckBox(v));}});
+                            
                             skillsTitledPane.setContent(skillsVBox);
-
-                            schoolVBox.getChildren().add(new CheckBox(education.getText()));
+                            schoolVBox.getChildren().clear();
+                            database.getSchool().forEach(v -> {if (!v.isEmpty()){schoolVBox.getChildren().add(new CheckBox(v));};});
                             schoolTitledPane.setContent(schoolVBox);
-
-                            tagsVBox.getChildren().add(new CheckBox(tags.getText()));
+                            tagsVBox.getChildren().clear();
+                            database.getTags().forEach(v -> {if (!v.isEmpty()){tagsVBox.getChildren().add(new CheckBox(v));};});
                             tagsTitledPane.setContent(tagsVBox);
-
-                            publicationsVBox.getChildren().add(new CheckBox(publications.getText()));
+                            publicationsVBox.getChildren().clear();
+                            database.getPublications().forEach(v -> {if (!v.isEmpty()){publicationsVBox.getChildren().add(new CheckBox(v));};});
                             publicationsTitledPane.setContent(publicationsVBox);
-
 
 
                             Map<String, Integer> newPublications = new HashMap<>();
@@ -332,10 +338,12 @@ public final class AppController {
                                         newSkills,
 
                                         Arrays.asList(tags.getText().split("\n")));
+                                System.out.println(cvv);
                             }
-                            database.update(cvv);
-                            treeView.getSelectionModel().getSelectedItem().setValue(cvv);
+                           
+                           database.update(cvv);                            
 
+                            treeView.getSelectionModel().getSelectedItem().setValue(cvv);
                             return cvv; // return new cv
                         } catch (NumberFormatException | SQLException e) {
                             e.printStackTrace();
@@ -445,8 +453,7 @@ public final class AppController {
             dialog.setResultConverter(type -> {
                 if (type == ButtonType.OK) {
                     try {
-                        locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));
-                        locationTitledPane.setContent(locationVBox);
+                        
                         Cv cv;
                         Map<String, Integer> newEducation = new HashMap<>();
                         Arrays.asList(education.getText().split("\n")).forEach(line -> {
@@ -510,17 +517,24 @@ public final class AppController {
                                     Arrays.asList(tags.getText().split("\n")));
                         }
                         Cv cvs=database.insert(cv);
-                        skillsVBox.getChildren().clear();
-                        locationVBox.getChildren().clear();
-                        schoolVBox.getChildren().clear();
-                        publicationsVBox.getChildren().clear();
-                        tagsVBox.getChildren().clear();
 
-                        database.getSkills().forEach(s -> skillsVBox.getChildren().add(new CheckBox(s)));
-                        database.getLocations().forEach(s -> locationVBox.getChildren().add(new CheckBox(s)));
-                        database.getTags().forEach(s ->tagsVBox.getChildren().add(new CheckBox(s)));
-                        database.getSchool().forEach(s -> schoolVBox.getChildren().add(new CheckBox(s)));
-                        database.getPublications().forEach(s -> publicationsVBox.getChildren().add(new CheckBox(s)));
+                        if(!homeAddress.getText().isEmpty()) {
+                                locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));}
+                            locationTitledPane.setContent(locationVBox);
+                            skillsVBox.getChildren().clear();
+                            database.getSkills().forEach(v -> {if (!v.isEmpty()){skillsVBox.getChildren().add(new CheckBox(v));}});
+                            
+                            skillsTitledPane.setContent(skillsVBox);
+                            schoolVBox.getChildren().clear();
+                            database.getSchool().forEach(v -> {if (!v.isEmpty()){schoolVBox.getChildren().add(new CheckBox(v));};});
+                            schoolTitledPane.setContent(schoolVBox);
+                            tagsVBox.getChildren().clear();
+                            database.getTags().forEach(v -> {if (!v.isEmpty()){tagsVBox.getChildren().add(new CheckBox(v));};});
+                            tagsTitledPane.setContent(tagsVBox);
+                            publicationsVBox.getChildren().clear();
+                            database.getPublications().forEach(v -> {if (!v.isEmpty()){publicationsVBox.getChildren().add(new CheckBox(v));};});
+                            publicationsTitledPane.setContent(publicationsVBox);
+                        
 
 
 
