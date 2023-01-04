@@ -260,7 +260,7 @@ public final class AppController {
 
                             if(!homeAddress.getText().isEmpty()) {
                                 locationVBox.getChildren().clear();
-                                database.getLocations().forEach(v->{if (!v.isEmpty()){if(v.equals(oldHomeAddress)){;}locationVBox.getChildren().add(new CheckBox(v));}});
+                                database.getLocations().forEach(v->{if (!v.isEmpty()){locationVBox.getChildren().add(new CheckBox(v));}});
                                 locationVBox.getChildren().add(new CheckBox(homeAddress.getText()));}
                             locationTitledPane.setContent(locationVBox);
                             skillsVBox.getChildren().clear();
@@ -606,6 +606,7 @@ public final class AppController {
                 }
                 
                 // if nothing is selected on filter accordion, the tree view is cleared. solve this problem later
+
                 root.getChildren().clear();
                 academicRoot.getChildren().clear();
 
@@ -613,14 +614,14 @@ public final class AppController {
 
 
                 // SKILLS BEGIN
-                queries.add("1=1 ");
+                queries.add("1=1 and");
 
                 skillsVBox.getChildren().forEach(skill -> {
                     CheckBox checkBox = (CheckBox) skill;
 
                     if (checkBox.isSelected()) {
 
-                        queries.add(" and cv.id in (select skill.cv_id from skill where skill.name = '" + checkBox.getText() + "' ) ");
+                        queries.add("  cv.id in (select skill.cv_id from skill where skill.name = '" + checkBox.getText() + "' ) and");
 
 
                     }
@@ -642,12 +643,11 @@ public final class AppController {
 
                     if (schoolCheckBox.isSelected()) {
 
-                        queries.add("and cv.id in (select education.cv_id from education where education.name = '" + schoolCheckBox.getText() + "') ");
+                        queries.add(" cv.id in (select education.cv_id from education where education.name = '" + schoolCheckBox.getText() + "') and ");
 
                     }
 
                 });
-                queries.add(" and ");
 
 
                 // SCHOOL END
@@ -661,7 +661,9 @@ public final class AppController {
 
                     if (publicationCheckBox.isSelected()) {
 
-                        queries.add("publications.name = '" + publicationCheckBox.getText() + "' and ");
+                        queries.add(" cv.id in (select publications.cv_id from publications where publication.name = '" + publicationCheckBox.getText() + "') and");
+
+
 
                     }
 
@@ -671,6 +673,16 @@ public final class AppController {
 
                 //PUBLICATION END
 
+                locationVBox.getChildren().forEach(location -> {
+                    CheckBox locationCheckBox = (CheckBox) location;
+
+                    if (locationCheckBox.isSelected()) {
+
+                        queries.add(" cv.homeAddress =  '" + locationCheckBox.getText() + "' and ");
+
+                    }
+
+                });
 
 
 
@@ -680,7 +692,8 @@ public final class AppController {
 
                     if (tagsCheckBox.isSelected()) {
 
-                        queries.add("tag.name = '" + tagsCheckBox.getText() + "' and ");
+                        queries.add(" cv.id in (select tag.cv_id from tag where tag.name = '" + tagsCheckBox.getText() + "') and");
+
 
                     }
 
