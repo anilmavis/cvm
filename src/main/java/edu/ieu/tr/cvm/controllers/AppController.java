@@ -503,6 +503,10 @@ public final class AppController {
                                     newPublications,
                                     Arrays.asList(tags.getText().split("\n")));
                         } else {
+                            String[] values = tags.getText().split("\n");
+                            for(int i =0;i<values.length;i++){
+                                values[i]=values[i].trim();
+                            }
                             cv = new Cv(fullName.getText(),
                                     Integer.parseInt(birthYear.getText()),
                                     Float.parseFloat(gpa.getText()),
@@ -514,7 +518,7 @@ public final class AppController {
                                     website.getText(),
                                     newEducation,
                                     newSkills,
-                                    Arrays.asList(tags.getText().split("\n")));
+                                    Arrays.asList(values));
                         }
                         Cv cvs=database.insert(cv);
 
